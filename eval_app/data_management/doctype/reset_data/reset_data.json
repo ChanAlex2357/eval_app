@@ -7,7 +7,9 @@
  "field_order": [
   "section_break_tvka",
   "reset_button",
-  "logs"
+  "logs",
+  "report_date",
+  "module"
  ],
  "fields": [
   {
@@ -25,14 +27,31 @@
   {
    "fieldname": "logs",
    "fieldtype": "Long Text",
-   "label": "Logs"
+   "label": "Logs",
+   "placeholder": "Detailled Logs",
+   "read_only": 1
+  },
+  {
+   "fieldname": "report_date",
+   "fieldtype": "Datetime",
+   "label": "Report Date",
+   "read_only": 1
+  },
+  {
+   "default": "RSM-All",
+   "fieldname": "module",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Module",
+   "options": "Reset Data Module",
+   "reqd": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-04-24 08:21:45.871064",
+ "modified": "2025-04-24 21:32:13.502404",
  "modified_by": "Administrator",
  "module": "Data Management",
  "name": "Reset Data",
