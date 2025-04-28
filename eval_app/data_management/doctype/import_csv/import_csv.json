@@ -1,12 +1,17 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "format:IMP{######}",
  "creation": "2025-04-24 07:30:53.212175",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
   "section_break_az36",
-  "amended_from"
+  "amended_from",
+  "import_date",
+  "procuct_file",
+  "tiers_file",
+  "desce"
  ],
  "fields": [
   {
@@ -22,16 +27,40 @@
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
+  },
+  {
+   "fieldname": "procuct_file",
+   "fieldtype": "Attach",
+   "label": "Item File"
+  },
+  {
+   "fieldname": "tiers_file",
+   "fieldtype": "Attach",
+   "label": "Tiers File"
+  },
+  {
+   "fieldname": "import_date",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "desce",
+   "fieldtype": "Data",
+   "label": "Description",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-04-24 07:30:53.212175",
+ "modified": "2025-04-28 07:21:27.490913",
  "modified_by": "Administrator",
  "module": "Data Management",
  "name": "Import Csv",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {
