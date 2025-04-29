@@ -13,7 +13,10 @@
   "status",
   "start_import_btn",
   "section_import_preview",
-  "import_preview"
+  "import_preview",
+  "section_import_logs",
+  "import_logs",
+  "logs_preview"
  ],
  "fields": [
   {
@@ -40,7 +43,7 @@
    "hidden": 1,
    "in_list_view": 1,
    "label": "Status",
-   "options": "Pending\nSucces\nPartial Success\nError",
+   "options": "Pending\nSuccess\nPartial Success\nError",
    "read_only": 1
   },
   {
@@ -65,12 +68,28 @@
    "fieldtype": "Link",
    "label": "Doctype",
    "options": "DocType"
+  },
+  {
+   "fieldname": "section_import_logs",
+   "fieldtype": "Section Break",
+   "label": "Logs"
+  },
+  {
+   "fieldname": "import_logs",
+   "fieldtype": "JSON",
+   "label": "Logs Data",
+   "read_only": 1
+  },
+  {
+   "fieldname": "logs_preview",
+   "fieldtype": "HTML",
+   "label": "Logs Preview"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-04-29 11:29:01.967965",
+ "modified": "2025-04-29 21:59:43.191736",
  "modified_by": "Administrator",
  "module": "Data Management",
  "name": "Import Csv",

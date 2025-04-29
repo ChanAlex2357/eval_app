@@ -6,4 +6,10 @@ from frappe.model.document import Document
 
 
 class ItemImportCsv(Document):
-	pass
+    def import_data(doc):
+        pass
+		# TODO: Controller les donnees
+		# TODO: Save id the database the tiers data if needed
+		# TODO: Save the imported data in the database
+
+

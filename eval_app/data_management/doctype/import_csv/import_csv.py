@@ -6,12 +6,24 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.core.doctype.data_import.importer import ImportFile
 from eval_app.data_management.doctype.import_csv.csv_importer import CsvImporter
+import json
 
 
 class ImportCsv(Document):
 	def start_import(self):
-		if (self.ref_doctype):
-			return False
+		
+		if not self.file:
+			frappe.throw(_("Please upload a file to import."))
+
+		if not self.ref_doctype:
+			frappe.throw(_("Please select a reference doctype."))
+
+		if not self.file.endswith(".csv"):
+			frappe.throw(_("Only CSV files are supported."))
+
+		self.importer = self.get_importer(self.file)
+		self.importer.import_data()
+
 		return True
 
 	def get_importer(self,file_path):
@@ -22,8 +34,12 @@ class ImportCsv(Document):
 		if import_file:
 			self.file = import_file
 		i = self.get_importer(import_file)
-
-		return i.parse_file()
+		out = i.parse_file()
+		import_logs = []
+		if self.import_logs:
+			import_logs = json.loads(self.import_logs)
+		out['import_logs'] = (import_logs)
+		return out
 
 
 
