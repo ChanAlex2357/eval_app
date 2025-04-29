@@ -53,19 +53,36 @@ frappe.ui.form.on("Import Csv", {
 			},
 			error_handlers: {
 				TimestampMismatchError() {
-					// ignore this error
 				},
 			},
 		}).then((r) => {
 			let preview_data = r.message;
+			console.log(preview_data);
 			frm.events.show_import_preview(frm, preview_data);
 			frm.events.show_import_warnings(frm, preview_data);
 		});
     },
 	show_import_preview(frm, preview_data) {
-	
+		const { columns, data } = preview_data;
+		let idx = 1;
+		const $table = $(`<table class="table table-bordered table-sm mt-3">
+			<thead>
+			<tr>
+				<th>#</th>
+				${columns.map(col => `<th>${col}</th>`).join("")}
+			</tr></thead>
+			<tbody>
+				${data.map(row => `<tr> <td>${idx+=1}</td> ${row.map(val => `<td>${val}</td>`).join("")}</tr>`).join("")}
+			</tbody>
+		</table>`);
+		frm.get_field("import_preview").$wrapper.empty().append($table);
+	},
+
+	import_file(frm) {
+		frappe.msgprint("Important")
 	},
 	show_import_warnings(frm,preview_data){
-		
-	}
+
+	},
+	
 });

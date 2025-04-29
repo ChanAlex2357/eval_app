@@ -22,7 +22,8 @@ class ImportCsv(Document):
 		if import_file:
 			self.file = import_file
 		i = self.get_importer(import_file)
-		return 
+
+		return i.parse_file()
 
 
 
