@@ -1,62 +1,76 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "format:IMP{######}",
- "creation": "2025-04-24 07:30:53.212175",
+ "autoname": "format:Import CSV {######}",
+ "creation": "2025-04-28 10:52:58.695064",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "section_break_az36",
-  "amended_from",
-  "import_date",
-  "procuct_file",
-  "tiers_file",
-  "desce"
+  "section_break_hkhc",
+  "file",
+  "ref_doctype",
+  "date",
+  "status",
+  "start_import_btn",
+  "section_import_preview",
+  "import_preview"
  ],
  "fields": [
   {
-   "fieldname": "section_break_az36",
+   "fieldname": "section_break_hkhc",
    "fieldtype": "Section Break"
   },
   {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Import Csv",
-   "print_hide": 1,
-   "read_only": 1,
-   "search_index": 1
-  },
-  {
-   "fieldname": "procuct_file",
+   "fieldname": "file",
    "fieldtype": "Attach",
-   "label": "Item File"
+   "label": "File",
+   "reqd": 1
   },
   {
-   "fieldname": "tiers_file",
-   "fieldtype": "Attach",
-   "label": "Tiers File"
-  },
-  {
-   "fieldname": "import_date",
+   "fieldname": "date",
    "fieldtype": "Datetime",
+   "hidden": 1,
    "in_list_view": 1,
    "label": "Date",
    "read_only": 1
   },
   {
-   "fieldname": "desce",
-   "fieldtype": "Data",
-   "label": "Description",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "hidden": 1,
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Pending\nSucces\nPartial Success\nError",
    "read_only": 1
+  },
+  {
+   "fieldname": "start_import_btn",
+   "fieldtype": "Button",
+   "label": "Start Import",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_import_preview",
+   "fieldtype": "Section Break",
+   "label": "Preview"
+  },
+  {
+   "fieldname": "import_preview",
+   "fieldtype": "HTML",
+   "label": "Import Preview",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ref_doctype",
+   "fieldtype": "Link",
+   "label": "Doctype",
+   "options": "DocType"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
- "is_submittable": 1,
  "links": [],
- "modified": "2025-04-28 07:21:27.490913",
+ "modified": "2025-04-29 11:29:01.967965",
  "modified_by": "Administrator",
  "module": "Data Management",
  "name": "Import Csv",
@@ -73,7 +87,6 @@
    "report": 1,
    "role": "System Manager",
    "share": 1,
-   "submit": 1,
    "write": 1
   }
  ],
