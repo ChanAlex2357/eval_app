@@ -16,6 +16,21 @@ DEFAULT_MODULES = [
     "Selling",
 ]
 
+EXCEPTION_TABLES = [
+    "User",
+    "Role",
+    "DocType",
+    "Module Def",
+    "Custom Field",
+    "Custom DocPerm",
+    "Custom Role",
+    "Custom Role Profile",
+    "Custom DocType",
+    "Custom Module",
+    "Custom Module Def",
+    "Account"
+]
+
 class ResetData(Document):
     pass
 
@@ -26,7 +41,7 @@ class ResetData(Document):
 
 def is_table_deletable(doctype, exceptions):
     """Vérifie si un Doctype peut être supprimé"""
-    return doctype not in exceptions
+    return doctype not in EXCEPTION_TABLES
 
 
 def delete_table_data(doctype):
