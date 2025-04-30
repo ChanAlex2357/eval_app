@@ -12,6 +12,7 @@ frappe.ui.form.on("Import Csv", {
 	},
 
 	refresh(frm) {
+		frm.disable_save();
 		frm.page.hide_icon_group();
 		frm.get_field("import_preview").$wrapper.empty()
 		frm.get_field("logs_preview").$wrapper.empty()
@@ -102,7 +103,10 @@ frappe.ui.form.on("Import Csv", {
 			const hasException = log.exception && log.exception !== "null" && log.exception !== null;
 			const row = $(`
 				<tr>
-					<td>${log.row_num}</td>
+					<td>
+						${log.row_num}
+						${hasException ?`<span class="badge badge-danger p-1"> </span>`:`<span class="badge badge-success p-1"> </span>`}
+					</td>
 					<td>
 						<div>${log.message}</div>
 						${hasException ? `

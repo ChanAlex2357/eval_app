@@ -16,14 +16,14 @@ class CsvImporter:
 
     def parse_file(self):
         return self.csv_file.get_data()
-    
+
     def import_data(self):
         import_log = []
         errors_count = 0
         success_count = 0
 
         rows = self.csv_file.rows
-        if not rows:
+        if not rows :
             raise ValueError("Aucune donnée à importer")
 
         try:
@@ -41,7 +41,7 @@ class CsvImporter:
                     if hasattr(doc, "import_data") and callable(doc.import_data):
                         doc.import_data()
                     else:
-                        raise ValueError("Le Doctype ne contient pas de méthode import_data")	
+                        raise ValueError("Le Doctype ne contient pas de méthode import_data")
 
                     import_log.append({
                         "row_num": row.row_num,
@@ -52,10 +52,9 @@ class CsvImporter:
                     success_count += 1
 
                 except Exception as e:
-                    frappe.log_error(frappe.get_traceback(), f"Erreur d'import ligne {row.row_num}")
                     import_log.append({
                         "row_num": row.row_num,
-                        "status": "Erreur",
+                        "status": "Error",
                         "message": str(e),
                         "exception": frappe.get_traceback()
                     })
@@ -63,19 +62,17 @@ class CsvImporter:
 
             if errors_count > 0:
                 raise ValueError(f"{errors_count} erreurs d'importation")
-            
+
             frappe.db.set_value("Import Csv", self.csv_import.name, "status", "Success")
-            frappe.db.commit()
         except Exception as e:
             frappe.db.rollback()
             error_status = "Error" if success_count == 0 else "Partial Success"
             frappe.db.set_value("Import Csv", self.csv_import.name, "status", error_status)
-            frappe.db.commit()
             raise e
         finally:
             frappe.db.set_value("Import Csv", self.csv_import.name, "import_logs", json.dumps(import_log))
+            frappe.db.commit()
             frappe.db.close()
-
 
 class Header:
     def __init__(self, raw_headers):
@@ -93,7 +90,7 @@ class Header:
 class Row:
     def __init__(self,index, data, header: Header):
         self.idx = index
-        self.row_num = self.idx + 1
+        self.row_num = self.idx + 2
         self.data = data
         self.header = header
 
@@ -109,21 +106,21 @@ class CsvFile:
         self.rows = []
 
         self._parse()
-    
-    
-    
+
+
+
 
     def _parse(self):
         file_name = frappe.db.get_value("File", {"file_url": self.file_path})
-        
+
         if not file_name:
             raise FileNotFoundError(f"Aucun fichier trouvé avec file_url = {self.file_path}")
-        
+
         file = frappe.get_doc("File", file_name)
         file_content = file.get_content()
-        
+
         raw_data = read_csv_content(file_content,True)
-        
+
         if not raw_data:
             raise ValueError("CSV file is empty")
 
