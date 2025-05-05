@@ -76,3 +76,58 @@ def generate_keys(user):
     user_details.save()
 
     return api_secret
+
+@frappe.whitelist()
+def get_purchase_orders_with_invoices(supplier_name=None):
+    try:
+        filters = {}
+        if supplier_name:
+            filters["supplier"] = supplier_name
+
+        # Fetch Purchase Orders
+        pos = frappe.get_all("Purchase Order", fields=["*"], filters=filters)
+
+        for po in pos:
+            # Query related Purchase Invoices through the 'items' child table
+            invoices = frappe.db.get_all(
+                "Purchase Invoice",
+                filters=[["Purchase Invoice Item", "purchase_order", "=", po.name]],
+                fields=["name", "status", "outstanding_amount", "rounded_total"]
+            )
+
+            total_paid = 0.0
+            inv_len = len(invoices)
+
+            for inv in invoices:
+                paid = (inv["rounded_total"] or 0) - (inv["outstanding_amount"] or 0)
+                total_paid += paid
+
+            amount_to_paid = po.grand_total or 0
+
+            # Determine custom payment status
+            if inv_len > 0 :
+                if amount_to_paid != total_paid:
+                    po["status"] +=" and Unpaid"
+                else:
+                    po["status"] +=" and Paid"
+
+            po["invoices"] = invoices
+
+
+        return make_response(
+            success=True,
+            message=_("Fetched purchase orders successfully."),
+            data=pos
+        )
+
+    except Exception:
+        frappe.log_error(
+            title="Error fetching purchase orders with invoices",
+            message=traceback.format_exc()
+        )
+        return make_response(
+            success=False,
+            message=_("An error occurred while fetching data."),
+            errors=[traceback.format_exc()]
+        )
+
