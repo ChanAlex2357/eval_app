@@ -13,9 +13,9 @@ DEFAULT_TABLES = [
     "Material Request Item",
     "Purchase Order",
     "Purchase Order Item",
-    "Request For Quotation",
-    "Request For Quotation Item",
-    "Request For Quotation Supplier",
+    "Request for Quotation",
+    "Request for Quotation Item",
+    "Request for Quotation Supplier",
     "Supplier Quotation",
     "Supplier Quotation Item",
 ]

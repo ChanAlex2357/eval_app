@@ -28,9 +28,9 @@ class File1DataImporter(DataImporter):
         if errors_count == 0:
             for ref in distinct_refs:
                 try:
-                    # mr = frappe.get_doc("Material Request", {"name": ref})
-                    # if mr.docstatus == 0:
-                    #     mr.submit()
+                    mr = frappe.get_doc("Material Request", {"ref": ref})
+                    if mr.docstatus == 0:
+                        mr.submit()
                 except Exception as e:
                     import_log.append(f"Erreur lors du submit pour la référence {ref} : {str(e)}")
                     errors_count += 1

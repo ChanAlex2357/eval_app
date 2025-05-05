@@ -20,7 +20,6 @@ class File1MaterialRequestImport(Document):
 			self.import_material_request_item(request_doc, item_doc)
 
 			if request_doc.is_new() :
-				request_doc.name = str(self.ref)
 				request_doc.insert(ignore_permissions=True)
 			else:
 				frappe.log("Saved ")
@@ -49,7 +48,7 @@ class File1MaterialRequestImport(Document):
 			raise Exception(f"Purpose invalide : {purpose}. Choix valides : {valid_purposes}")
 
 		# Vérifier si une MR avec la référence existe déjà
-		existing = frappe.db.exists("Material Request", {"name": ref})
+		existing = frappe.db.exists("Material Request", {"ref": ref})
 		if existing:
 			return frappe.get_doc("Material Request", existing)
 
@@ -61,6 +60,7 @@ class File1MaterialRequestImport(Document):
 			"schedule_date": date,
 			"material_request_type": purpose,
 			"company": frappe.defaults.get_user_default("Company"),
+			"ref":ref
 		})
 		return mr
 
