@@ -6,7 +6,7 @@ class File1DataImporter(DataImporter):
     
     def make_stack_import(self, rows, dt):
         import_log = [] 
-        errors_count = 5 
+        errors_count = 0
         success_count = 0
 
         for row in rows:

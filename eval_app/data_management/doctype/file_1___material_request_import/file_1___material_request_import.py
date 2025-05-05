@@ -18,6 +18,12 @@ class File1MaterialRequestImport(Document):
 
 			# Traitement 3 : Material Request Item
 			self.import_material_request_item(request_doc, item_doc)
+
+			# if request_doc.is_new () :
+				# request_doc.insert(ignore_permissions=True)
+			# else:
+				# request_doc.save(ignore_permissions=True)
+				
 		except Exception as e:
 			frappe.log_error(str(e), "Erreur Import Material Request")
 			raise e
@@ -55,7 +61,6 @@ class File1MaterialRequestImport(Document):
 			"material_request_type": purpose,
 			"company": frappe.defaults.get_user_default("Company"),
 		})
-		mr.insert(ignore_permissions=True)
 		return mr
 
 	# ========== Traitement 2 ==========
@@ -63,7 +68,7 @@ class File1MaterialRequestImport(Document):
 		import frappe
 
 		item_name = self.item_name
-		item_group = self.item_group
+		item_group = self.item_groupe
 		
 		# Créer item si inexistant
 		item = frappe.db.exists("Item", {"item_name": item_name})
@@ -77,6 +82,8 @@ class File1MaterialRequestImport(Document):
 				"item_group_name": item_group,
 				"is_group": 0
 			})
+			frappe.msgprint('Group created : '+group.item_group_name)
+			
 			group.insert(ignore_permissions=True)
 
 		# Sinon créer item
@@ -96,13 +103,21 @@ class File1MaterialRequestImport(Document):
 
 	# ========== Traitement 3 ==========
 	def import_material_request_item(self, request_doc, item_doc):
-		warehouse = self.target_warehouse + " - IE2"
+		warehouse = self.target_warehouse
 		quantity = self.parse_quantity(self.quantity)
 		required_by = self.validate_date_format(self.required_by)
 
-		# Vérifier entrepôt
-		if not frappe.db.exists("Warehouse", warehouse):
-			raise Exception(f"Entrepôt inconnu : {warehouse}")
+		# Vérifier entrepôt avec LIKE
+		warehouse_result = frappe.db.sql(
+			"""SELECT name FROM `tabWarehouse` WHERE name LIKE %s""",
+			(f"%{warehouse}%",)
+		)
+
+		if not warehouse_result:
+			raise Exception(f"Aucun entrepôt correspondant à '{warehouse}'")
+
+		# Optionnel : utiliser le premier entrepôt trouvé
+		warehouse = warehouse_result[0][0]
 
 		# Date requise >= date MR
 		if getdate(required_by) < getdate(request_doc.transaction_date):
@@ -115,7 +130,6 @@ class File1MaterialRequestImport(Document):
 			"schedule_date": getdate(required_by),
 			"warehouse": warehouse
 		})
-		request_doc.save(ignore_permissions=True)
 
 	# ========== Utils ==========
 	def validate_date_format(self, date_str):
