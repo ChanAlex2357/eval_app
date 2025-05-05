@@ -18,35 +18,6 @@ class CsvImporter:
     def parse_file(self):
         return self.csv_file.get_data()
 
-    # def make_row_import(self, row):
-    #     row_data = row.as_dict()
-    #     try:
-    #         doc = frappe.new_doc(self.doctype)
-    #         # Assigner les valeurs du CSV à l'instance du Doctype
-    #         for key, value in row_data.items():
-    #             doc.set(key, value)
-
-    #         # Si le Doctype contient une méthode `import_data`, l'exécuter
-    #         if hasattr(doc, "import_data") and callable(doc.import_data):
-    #             doc.import_data()
-    #         else:
-    #             raise ValueError("Le Doctype ne contient pas de méthode import_data")
-
-    #         return {
-    #             "row_num": row.row_num,
-    #             "status": "Success",
-    #             "message": f"Importation réussie la ligne {row.row_num}",
-    #             "exception": None
-    #         },True
-
-    #     except Exception as e:
-    #         return {
-    #             "row_num": row.row_num,
-    #             "status": "Error",
-    #             "message": str(e),
-    #             "exception": frappe.get_traceback()
-    #         },False
-
     def make_default_import(self, rows):
         import_log = []
         errors_count = 0
@@ -61,7 +32,6 @@ class CsvImporter:
                 errors_count += 1
         return import_log, errors_count, success_count
 
-
     def import_data(self):
         rows = self.csv_file.rows
         if not rows :
@@ -75,8 +45,7 @@ class CsvImporter:
 
             doc = frappe.new_doc(self.doctype)
             if hasattr(doc, "get_data_stack_importer") and callable(doc.import_data):
-                # import_log,errors_count,success_count = doc.get_data_stack_importer().make_stack_import(rows)
-                pass
+                import_log,errors_count,success_count = doc.get_data_stack_importer().make_stack_import(rows)
             else:
                 import_log, errors_count, success_count = self.make_default_import(rows)
 
