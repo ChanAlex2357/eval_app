@@ -19,10 +19,11 @@ class File1MaterialRequestImport(Document):
 			# Traitement 3 : Material Request Item
 			self.import_material_request_item(request_doc, item_doc)
 
-			if request_doc.is_new () :
-				request_doc.name = self.ref
+			if request_doc.is_new() :
+				request_doc.name = str(self.ref)
 				request_doc.insert(ignore_permissions=True)
 			else:
+				frappe.log("Saved ")
 				request_doc.save(ignore_permissions=True)
 				
 		except Exception as e:
@@ -32,7 +33,7 @@ class File1MaterialRequestImport(Document):
 	# ========== Traitement 1 ==========
 	def import_material_request(self):
 
-		ref = self.ref
+		ref = str(self.ref)
 		purpose = self.purpose
 		date = self.date  # format attendu : jj/mm/yyyy
 

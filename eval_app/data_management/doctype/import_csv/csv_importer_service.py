@@ -3,8 +3,8 @@ import frappe
 
 def make_row_import(row, dt):
     row_data = row.as_dict()
+    doc = frappe.new_doc(dt)
     try:
-        doc = frappe.new_doc(dt)
         # Assigner les valeurs du CSV à l'instance du Doctype
         for key, value in row_data.items():
             doc.set(key, value)
@@ -20,7 +20,7 @@ def make_row_import(row, dt):
             "status": "Success",
             "message": f"Importation réussie la ligne {row.row_num}",
             "exception": None
-        },True
+        },True,doc
 
     except Exception as e:
         return {
@@ -28,4 +28,4 @@ def make_row_import(row, dt):
             "status": "Error",
             "message": str(e),
             "exception": frappe.get_traceback()
-        },False
+        },False,doc

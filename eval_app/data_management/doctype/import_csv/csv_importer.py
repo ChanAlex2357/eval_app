@@ -24,7 +24,7 @@ class CsvImporter:
         success_count = 0
         
         for row in rows:
-            log,is_success = make_row_import(row, self.doctype)
+            log, is_success, doc = make_row_import(row, self.doctype)
             import_log.append(log)
             if is_success :
                 success_count += 1

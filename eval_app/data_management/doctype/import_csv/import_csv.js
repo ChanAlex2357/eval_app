@@ -32,7 +32,7 @@ frappe.ui.form.on("Import Csv", {
                 frm.refresh();
 			}
             else{
-                frappe.msgprint("Import FALSE");
+                frm.refresh()
             }
 		});
 	},
