@@ -45,7 +45,7 @@ class CsvImporter:
 
             doc = frappe.new_doc(self.doctype)
             if hasattr(doc, "get_data_stack_importer") and callable(doc.import_data):
-                import_log,errors_count,success_count = doc.get_data_stack_importer().make_stack_import(rows)
+                import_log,errors_count,success_count = doc.get_data_stack_importer().make_stack_import(rows, self.doctype)
             else:
                 import_log, errors_count, success_count = self.make_default_import(rows)
 
