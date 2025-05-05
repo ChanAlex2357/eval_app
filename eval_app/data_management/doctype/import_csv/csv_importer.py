@@ -2,6 +2,7 @@ import frappe
 import json
 from frappe.utils.file_manager import get_file_path
 from frappe.utils.csvutils import read_csv_content
+from eval_app.data_management.doctype.import_csv.csv_importer_service import make_row_import
 
 class CsvImporter:
     def __init__(self, doctype, file_path, csv_import=None):
@@ -17,48 +18,67 @@ class CsvImporter:
     def parse_file(self):
         return self.csv_file.get_data()
 
-    def import_data(self):
+    # def make_row_import(self, row):
+    #     row_data = row.as_dict()
+    #     try:
+    #         doc = frappe.new_doc(self.doctype)
+    #         # Assigner les valeurs du CSV à l'instance du Doctype
+    #         for key, value in row_data.items():
+    #             doc.set(key, value)
+
+    #         # Si le Doctype contient une méthode `import_data`, l'exécuter
+    #         if hasattr(doc, "import_data") and callable(doc.import_data):
+    #             doc.import_data()
+    #         else:
+    #             raise ValueError("Le Doctype ne contient pas de méthode import_data")
+
+    #         return {
+    #             "row_num": row.row_num,
+    #             "status": "Success",
+    #             "message": f"Importation réussie la ligne {row.row_num}",
+    #             "exception": None
+    #         },True
+
+    #     except Exception as e:
+    #         return {
+    #             "row_num": row.row_num,
+    #             "status": "Error",
+    #             "message": str(e),
+    #             "exception": frappe.get_traceback()
+    #         },False
+
+    def make_default_import(self, rows):
         import_log = []
         errors_count = 0
         success_count = 0
+        
+        for row in rows:
+            log,is_success = make_row_import(row, self.doctype)
+            import_log.append(log)
+            if is_success :
+                success_count += 1
+            else :
+                errors_count += 1
+        return import_log, errors_count, success_count
 
+
+    def import_data(self):
         rows = self.csv_file.rows
         if not rows :
             raise ValueError("Aucune donnée à importer")
 
+        import_log = []
+        errors_count = 0
+        success_count = 0
         try:
             frappe.db.begin()
 
-            for row in rows:
-                row_data = row.as_dict()
-                try:
-                    doc = frappe.new_doc(self.doctype)
-                    # Assigner les valeurs du CSV à l'instance du Doctype
-                    for key, value in row_data.items():
-                        doc.set(key, value)
-
-                    # Si le Doctype contient une méthode `import_data`, l'exécuter
-                    if hasattr(doc, "import_data") and callable(doc.import_data):
-                        doc.import_data()
-                    else:
-                        raise ValueError("Le Doctype ne contient pas de méthode import_data")
-
-                    import_log.append({
-                        "row_num": row.row_num,
-                        "status": "Success",
-                        "message": f"Importation réussie la ligne {row.row_num}",
-                        "exception": None
-                    })
-                    success_count += 1
-
-                except Exception as e:
-                    import_log.append({
-                        "row_num": row.row_num,
-                        "status": "Error",
-                        "message": str(e),
-                        "exception": frappe.get_traceback()
-                    })
-                    errors_count += 1
+            doc = frappe.new_doc(self.doctype)
+            if hasattr(doc, "get_data_stack_importer") and callable(doc.import_data):
+                # import_log,errors_count,success_count = doc.get_data_stack_importer().make_stack_import(rows)
+                pass
+            else:
+                import_log, errors_count, success_count = self.make_default_import(rows)
 
             if errors_count > 0:
                 raise ValueError(f"{errors_count} erreurs d'importation")
@@ -73,7 +93,7 @@ class CsvImporter:
             frappe.db.set_value("Import Csv", self.csv_import.name, "import_logs", json.dumps(import_log))
             frappe.db.commit()
             frappe.db.close()
-
+            
 class Header:
     def __init__(self, raw_headers):
         self.raw_headers = raw_headers

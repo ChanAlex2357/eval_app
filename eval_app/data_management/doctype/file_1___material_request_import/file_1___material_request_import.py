@@ -6,4 +6,5 @@ from frappe.model.document import Document
 
 
 class File1MaterialRequestImport(Document):
-	pass
+	def import_data(self):
+		pass
