@@ -19,10 +19,11 @@ class File1MaterialRequestImport(Document):
 			# Traitement 3 : Material Request Item
 			self.import_material_request_item(request_doc, item_doc)
 
-			# if request_doc.is_new () :
-				# request_doc.insert(ignore_permissions=True)
-			# else:
-				# request_doc.save(ignore_permissions=True)
+			if request_doc.is_new () :
+				request_doc.name = self.ref
+				request_doc.insert(ignore_permissions=True)
+			else:
+				request_doc.save(ignore_permissions=True)
 				
 		except Exception as e:
 			frappe.log_error(str(e), "Erreur Import Material Request")
@@ -55,7 +56,6 @@ class File1MaterialRequestImport(Document):
 		mr = frappe.get_doc({
 			"doctype": "Material Request",
 			"title": "MR - " + ref,
-			"name": ref,
 			"transaction_date": date,
 			"schedule_date": date,
 			"material_request_type": purpose,
