@@ -1,0 +1,77 @@
+{
+ "app": "eval_app",
+ "charts": [],
+ "content": "[{\"id\":\"QVzgiItfM5\",\"type\":\"header\",\"data\":{\"text\":\"<span style=\\\"font-size: 16px;\\\">Page de manipulation des donnees de ERPNext</span>\",\"col\":12}},{\"id\":\"jNoq8Lhkjo\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Import Csv\",\"col\":3}},{\"id\":\"jm8vdp_HJd\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"8VclNb1o6P\",\"type\":\"card\",\"data\":{\"card_name\":\"Reset Data\",\"col\":3}},{\"id\":\"ZQkmI-EvyA\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Reset Modules\",\"col\":6}}]",
+ "creation": "2025-04-24 08:12:42.438741",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "color-energy-points",
+ "idx": 0,
+ "indicator_color": "green",
+ "is_hidden": 0,
+ "label": "Data Management",
+ "link_type": "DocType",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Reset Data",
+   "link_count": 2,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Reset",
+   "link_count": 0,
+   "link_to": "Reset Data",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Resetable Module",
+   "link_count": 0,
+   "link_to": "Reset Data Module",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2025-04-24 10:16:45.191820",
+ "modified_by": "Administrator",
+ "module": "Data Management",
+ "name": "Data Management",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [
+  {
+   "document_type": "Reset Data Module",
+   "label": "Reset Modules",
+   "quick_list_filter": "[]"
+  }
+ ],
+ "roles": [],
+ "sequence_id": 23.0,
+ "shortcuts": [
+  {
+   "color": "Grey",
+   "doc_view": "New",
+   "label": "Import Csv",
+   "link_to": "Import Csv",
+   "stats_filter": "[]",
+   "type": "DocType"
+  }
+ ],
+ "title": "Data Management",
+ "type": "Workspace"
+}
