@@ -7,13 +7,19 @@ from frappe.model.document import Document
 
 # Listes des tables et modules critiques à ne pas supprimer
 DEFAULT_TABLES = [
-    "Sales Invoice",
-    "Purchase Invoice",
+    "Supplier",
+    "Item",
+    "Material Request",
+    "Material Request Item",
+    "Purchase Order",
+    "Purchase Order Item",
+    "Request For Quotation",
+    "Request For Quotation Item",
+    "Request For Quotation Supplier",
+    "Supplier Quotation",
+    "Supplier Quotation Item",
 ]
 DEFAULT_MODULES = [
-    "Stock",
-    "Buying",
-    "Selling",
 ]
 
 EXCEPTION_TABLES = [
@@ -108,12 +114,6 @@ def reset_data(module=None):
     Fonction principale appelée par le bouton de réinitialisation.
     Elle lit les paramètres du DocType 'Reset Data Module'.
     """
-    if not module:
-        frappe.throw("Le module est requis pour réinitialiser les données.")
-
-    doc_module = frappe.get_doc("Reset Data Module", module)
-    exceptions = doc_module.exceptions or []
-    doc_name = doc_module.label
 
     logs = []
     

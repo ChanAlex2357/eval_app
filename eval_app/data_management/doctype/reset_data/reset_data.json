@@ -42,15 +42,14 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Module",
-   "options": "Reset Data Module",
-   "reqd": 1
+   "options": "Reset Data Module"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-04-24 21:32:13.502404",
+ "modified": "2025-05-06 00:07:06.737161",
  "modified_by": "Administrator",
  "module": "Data Management",
  "name": "Reset Data",
