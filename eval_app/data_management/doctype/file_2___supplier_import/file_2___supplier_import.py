@@ -27,7 +27,7 @@ class File2SupplierImport(Document):
 
 		# Sauvegarder le fournisseur
 		supplier_doc.insert(ignore_permissions=True)
-		frappe.msgprint(f"Fournisseur '{self.supplier_name}' créé avec succès.")
+		
 	# = = = = = Country control = = = = =
 	def import_data_country(self):
 		country_name = self.country

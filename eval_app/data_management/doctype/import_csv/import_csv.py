@@ -38,7 +38,8 @@ class ImportCsv(Document):
 		import_logs = {}
 		if self.import_logs:
 			il = (self.import_logs)
-			import_logs = json.loads(il)
+			il_data = json.loads(il)
+			import_logs = il_data
 
 		out['import_logs'] = (import_logs)
 		return out

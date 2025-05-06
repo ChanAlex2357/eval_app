@@ -5,8 +5,8 @@ from frappe.utils import getdate
 from eval_app.data_management.doctype.file_1___material_request_import.file_1_data_importer import File1DataImporter
 
 class File1MaterialRequestImport(Document):
-	def get_data_stack_importer(self):
-		return File1DataImporter()
+	# def get_data_stack_importer(self):
+	# 	return File1DataImporter()
 
 	def import_data(self):
 		try:

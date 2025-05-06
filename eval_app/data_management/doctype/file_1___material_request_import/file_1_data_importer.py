@@ -9,7 +9,6 @@ class File1DataImporter(DataImporter):
         import_log = [] 
         errors_count = 0
         success_count = 0
-        distinct_refs = set()
 
         for row in rows:
             log, is_success, doc = make_row_import(row, dt)
@@ -19,20 +18,5 @@ class File1DataImporter(DataImporter):
                 success_count += 1
             else:
                 errors_count += 1
-            
-            ref = doc.ref  # Assure-toi que c’est bien une clé
-            if ref: 
-                distinct_refs.add(ref)
-
-        # Si aucune erreur, on soumet tous les Material Request liés
-        if errors_count == 0:
-            for ref in distinct_refs:
-                try:
-                    mr = frappe.get_doc("Material Request", {"ref": ref})
-                    if mr.docstatus == 0:
-                        mr.submit()
-                except Exception as e:
-                    import_log.append(f"Erreur lors du submit pour la référence {ref} : {str(e)}")
-                    errors_count += 1
 
         return import_log, errors_count, success_count

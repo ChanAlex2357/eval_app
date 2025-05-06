@@ -32,7 +32,7 @@ class CsvImporter:
                 errors_count += 1
         return import_log, errors_count, success_count
 
-    def import_data(self):
+    def import_data(self,trasactional =True):
         rows = self.csv_file.rows
         if not rows :
             raise ValueError("Aucune donnée à importer")
