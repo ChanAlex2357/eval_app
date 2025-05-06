@@ -32,18 +32,19 @@ class ImportCsv(Document):
 		return result_status , import_logs, errors_count, success_count
 
 	def set_status(self, status, logs):
-		status_str = ""
-		if status == 1:
-			status_str = "Success"
-		elif status == 0:
-			status_str = "Partial Success"
-		else:
-			status_str = "Error"
+		status_str = self.get_status(status)
 		try:
 			frappe.db.set_value("Import Csv", self.name, "status", status_str)
 			frappe.db.set_value("Import Csv", self.name, "import_logs", json.dumps(logs))
 		except Exception as e:
 			raise Exception("Erreur lors de la mise a jour du status de l'import : "+str(e))
+	def get_status(self, status):
+		if status == 1:
+			return "Success"
+		elif status == 0:
+			return "Partial Success"
+		else:
+			return "Error"
 
 	def get_importer(self,file_path):
 		return CsvImporter(self.ref_doctype,file_path,self)

@@ -135,15 +135,18 @@ class File1MaterialRequestImport(Document):
 	def validate_date_format(self, date_str):
 		from datetime import datetime
 		try:
-			return datetime.strptime(date_str, "%d/%m/%Y").date()
+			try:
+				return datetime.strptime(date_str, "%d/%m/%Y").date()
+			except ValueError:
+				return datetime.strptime(date_str, "%d-%m-%Y").date()
 		except Exception:
 			raise Exception(f"Format de date invalide : {date_str}. Format attendu : jj/mm/aaaa")
 
 	def parse_quantity(self, qty_str):
 		try:
-			qty = int(qty_str)
+			qty = float(qty_str)
 			if qty < 0:
 				raise Exception("La quantité doit être positive")
 			return qty
-		except ValueError:
-			raise Exception(f"Quantité invalide : {qty_str}")
+		except ValueError as e:
+			raise Exception(f"Quantité invalide : {qty_str} | {str(e)}")

@@ -6,7 +6,7 @@ class EvalImporter:
             import_file
         ):
         self.import_file = import_file
-        self.status = None
+        self.status = 0
         self.logs = []
         self.error_count = 0
         self.success_count = 0

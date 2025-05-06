@@ -14,12 +14,17 @@ class EvalImport(Document):
 		imports.append	(self.get_file_2_import())
 		imports.append	(self.get_file_3_import())
 
-
 		frappe.db.commit()
 
 		try:
+			frappe.db.begin()
+
+			sum_status = 0
 			for import_file in imports:
 				import_file.start_import()
+				sum_status += import_file.status
+			if sum_status != 3:
+				raise Exception("Failed to import data")
 
 			frappe.db.commit()
 		except Exception as e:
@@ -29,10 +34,11 @@ class EvalImport(Document):
 			# commit status of import file
 			for import_file in imports:
 				import_file.commit_status()
-
 			frappe.db.commit()
+			return self.get_resutlt_report(imports)
 
-		return self.get_resutlt_report(imports)
+
+		
 
 	def get_resutlt_report(self,imports=None):
 		if not imports:
