@@ -76,7 +76,7 @@
   },
   {
    "fieldname": "import_logs",
-   "fieldtype": "JSON",
+   "fieldtype": "Long Text",
    "hidden": 1,
    "label": "Logs Data",
    "read_only": 1
@@ -90,7 +90,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-04-29 22:12:22.956504",
+ "modified": "2025-05-06 13:17:44.099919",
  "modified_by": "Administrator",
  "module": "Data Management",
  "name": "Import Csv",

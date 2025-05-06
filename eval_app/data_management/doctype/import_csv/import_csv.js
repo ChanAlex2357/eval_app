@@ -12,7 +12,6 @@ frappe.ui.form.on("Import Csv", {
 	},
 
 	refresh(frm) {
-		frm.disable_save();
 		frm.page.hide_icon_group();
 		frm.get_field("import_preview").$wrapper.empty()
 		frm.get_field("logs_preview").$wrapper.empty()

@@ -5,17 +5,18 @@ from frappe.utils import getdate
 from eval_app.data_management.doctype.file_1___material_request_import.file_1_data_importer import File1DataImporter
 
 class File1MaterialRequestImport(Document):
-	def get_data_stack_importer(self):
-		return File1DataImporter()
+	# def get_data_stack_importer(self):
+	# 	return File1DataImporter()
 
 	def import_data(self):
 		try:
-			# Traitement 1 : Material Request
-			request_doc = self.import_material_request()
 
-			# Traitement 2 : Item
+			# Traitement 1 : Item
 			item_doc = self.import_item()
 
+			# Traitement 2 : Material Request
+			request_doc = self.import_material_request()
+			
 			# Traitement 3 : Material Request Item
 			self.import_material_request_item(request_doc, item_doc)
 
@@ -29,10 +30,9 @@ class File1MaterialRequestImport(Document):
 			frappe.log_error(str(e), "Erreur Import Material Request")
 			raise e
 
-	# ========== Traitement 1 ==========
 	def import_material_request(self):
 
-		ref = str(self.ref)
+		ref = str(int(self.ref))
 		purpose = self.purpose
 		date = self.date  # format attendu : jj/mm/yyyy
 
@@ -64,7 +64,6 @@ class File1MaterialRequestImport(Document):
 		})
 		return mr
 
-	# ========== Traitement 2 ==========
 	def import_item(self):
 		import frappe
 
@@ -101,24 +100,24 @@ class File1MaterialRequestImport(Document):
 		new_item.submit()
 
 		return new_item
+	
+	def get_warehouse(self):
+		warehouse_result = frappe.db.exists("Warehouse",{"warehouse_name": self.target_warehouse})
+		if not warehouse_result:
+			warehouse= frappe.get_doc({
+				"doctype": "Warehouse",
+				"warehouse_name":self.target_warehouse,
+				"company":frappe.defaults.get_user_default("Company")
+			})
+			warehouse.insert()
+			return warehouse
 
-	# ========== Traitement 3 ==========
+		return frappe.get_doc("Warehouse",warehouse_result)
+
 	def import_material_request_item(self, request_doc, item_doc):
-		warehouse = self.target_warehouse
+		warehouse = self.get_warehouse()
 		quantity = self.parse_quantity(self.quantity)
 		required_by = self.validate_date_format(self.required_by)
-
-		# Vérifier entrepôt avec LIKE
-		warehouse_result = frappe.db.sql(
-			"""SELECT name FROM `tabWarehouse` WHERE name LIKE %s""",
-			(f"%{warehouse}%",)
-		)
-
-		if not warehouse_result:
-			raise Exception(f"Aucun entrepôt correspondant à '{warehouse}'")
-
-		# Optionnel : utiliser le premier entrepôt trouvé
-		warehouse = warehouse_result[0][0]
 
 		# Date requise >= date MR
 		if getdate(required_by) < getdate(request_doc.transaction_date):
@@ -129,22 +128,25 @@ class File1MaterialRequestImport(Document):
 			"item_code": item_doc.name,
 			"qty": quantity,
 			"schedule_date": getdate(required_by),
-			"warehouse": warehouse
+			"warehouse": warehouse.name
 		})
 
 	# ========== Utils ==========
 	def validate_date_format(self, date_str):
 		from datetime import datetime
 		try:
-			return datetime.strptime(date_str, "%d/%m/%Y").date()
+			try:
+				return datetime.strptime(date_str, "%d/%m/%Y").date()
+			except ValueError:
+				return datetime.strptime(date_str, "%d-%m-%Y").date()
 		except Exception:
 			raise Exception(f"Format de date invalide : {date_str}. Format attendu : jj/mm/aaaa")
 
 	def parse_quantity(self, qty_str):
 		try:
-			qty = int(qty_str)
+			qty = float(qty_str)
 			if qty < 0:
 				raise Exception("La quantité doit être positive")
 			return qty
-		except ValueError:
-			raise Exception(f"Quantité invalide : {qty_str}")
+		except ValueError as e:
+			raise Exception(f"Quantité invalide : {qty_str} | {str(e)}")

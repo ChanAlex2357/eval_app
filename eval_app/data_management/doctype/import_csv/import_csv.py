@@ -11,7 +11,6 @@ import json
 
 class ImportCsv(Document):
 	def start_import(self):
-		
 		if not self.file:
 			frappe.throw(_("Please upload a file to import."))
 
@@ -22,9 +21,30 @@ class ImportCsv(Document):
 			frappe.throw(_("Only CSV files are supported."))
 
 		self.importer = self.get_importer(self.file)
-		self.importer.import_data()
+		
+		import_logs, errors_count, success_count =  self.importer.import_data()
+		result_status = 1
+		if errors_count > 0:
+			error_status = -1 if success_count == 0 else 0
+			# frappe.db.set_value("Import Csv", self.name, "status", error_status)
+			result_status = error_status
+		
+		return result_status , import_logs, errors_count, success_count
 
-		return True
+	def set_status(self, status, logs):
+		status_str = self.get_status(status)
+		try:
+			frappe.db.set_value("Import Csv", self.name, "status", status_str)
+			frappe.db.set_value("Import Csv", self.name, "import_logs", json.dumps(logs))
+		except Exception as e:
+			raise Exception("Erreur lors de la mise a jour du status de l'import : "+str(e))
+	def get_status(self, status):
+		if status == 1:
+			return "Success"
+		elif status == 0:
+			return "Partial Success"
+		else:
+			return "Error"
 
 	def get_importer(self,file_path):
 		return CsvImporter(self.ref_doctype,file_path,self)
@@ -38,17 +58,34 @@ class ImportCsv(Document):
 		import_logs = {}
 		if self.import_logs:
 			il = (self.import_logs)
-			import_logs = json.loads(il)
+			il_data = json.loads(il)
+			import_logs = il_data
 
 		out['import_logs'] = (import_logs)
 		return out
 
-
-
 @frappe.whitelist()
 def form_start_import(import_name: str):
 	di: ImportCsv = frappe.get_doc("Import Csv", import_name)
-	return di.start_import()
+	import_status = "" 
+	import_logs = [] 
+	errors_count = 0
+	success_count = 0
+	try:
+		frappe.db.begin()
+		import_status, import_logs, errors_count, success_count = di.start_import()
+		if import_status != 1:
+			raise Exception(f"{errors_count} erreurs d'importation")
+		frappe.db.commit()
+	except Exception as e:
+		frappe.db.rollback()
+		raise e
+	finally:
+		di.set_status(import_status, import_logs)
+		frappe.db.commit()
+		frappe.db.close()
+		
+	return True
 
 @frappe.whitelist()
 def get_html_preview(
