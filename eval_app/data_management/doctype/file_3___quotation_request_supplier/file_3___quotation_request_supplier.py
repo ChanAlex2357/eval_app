@@ -3,13 +3,17 @@
 
 import frappe
 from frappe.model.document import Document
+from eval_app.data_management.doctype.file_3___quotation_request_supplier.file_3_data_importer import File3DataImporter
 from erpnext.stock.doctype.material_request.material_request import make_request_for_quotation
 
 
 class File3QuotationRequestSupplier(Document):
+	def get_data_stack_importer(self):
+		return File3DataImporter()
+
 	def import_data(self):
 		supplier = self.get_supplier_child()
-		rfq = self.get_request_for_quotation_supplier()
+		rfq = self.get_request_for_quotation()
 		rfq.append(
 			"suppliers",
 			{
@@ -19,18 +23,20 @@ class File3QuotationRequestSupplier(Document):
 		)
 
 		if rfq.is_new():
+			rfq.message_for_supplier = "Request for quotation message "
 			rfq.insert(ignore_permissions=True)
 		else:
 			rfq.save()
 
-	def get_request_for_quotation_supplier(self):
-		existing = frappe.db.exists("Request for Quotation Supplier",{"ref":self.ref})
+	def get_request_for_quotation(self):
+		ref = self.ref_request_quotation
+		existing = frappe.db.exists("Request for Quotation",{"ref":ref})
 		if existing:
-			return existing
+			return frappe.get_doc("Request for Quotation",existing)
 
-		mr = frappe.get_doc("Material Request", {"ref": self.ref})
+		mr = frappe.get_doc("Material Request", {"ref": ref})
 		if not mr :
-			raise Exception(f"Aucun Materiel Request avec ref {self.ref}")
+			raise Exception(f"Aucun Materiel Request avec ref {ref}")
 		# Utilise la fonction existante pour générer le RFQ
 		rfq = make_request_for_quotation(source_name=mr.name)
 		return rfq
@@ -40,6 +46,6 @@ class File3QuotationRequestSupplier(Document):
 		exist = frappe.db.exists("Supplier", supplier_name) 
 		if not exist:
 			raise Exception(f"Supplier '{supplier_name}' introuvable")
-		return exist
+		return  frappe.get_doc("Supplier", exist)
 
 

@@ -21,7 +21,7 @@ class File3DataImporter(DataImporter):
             else:
                 errors_count += 1
             
-            ref = doc.ref  # Assure-toi que c’est bien une clé
+            ref = doc.ref_request_quotation  # Assure-toi que c’est bien une clé
             if ref: 
                 distinct_refs.add(ref)
 
