@@ -8,21 +8,39 @@ from frappe.model.document import Document
 # Listes des tables et modules critiques à ne pas supprimer
 DEFAULT_TABLES = [
     "Supplier",
+
+    # Materiel request
     "Material Request",
     "Material Request Item",
+
+    # Purchase Order
     "Purchase Order",
     "Purchase Order Item",
+
+    # Request for quotation
     "Request for Quotation",
     "Request for Quotation Item",
     "Request for Quotation Supplier",
+
+    # Supplier quotation
     "Supplier Quotation",
     "Supplier Quotation Item",
+
+    # Purchase Invoice
+    "Purchase Invoice",
+    "Purchase Invoice Item",
+
+    # Payement
+    "Payment Entry",
     
     # STOCK
     "Item",
     "Item Price",
     "Stock Ledger Entry",
-    "Bin"
+    "Bin",
+
+    # Import
+    "Import Csv"
 ]
 DEFAULT_MODULES = [
 ]
