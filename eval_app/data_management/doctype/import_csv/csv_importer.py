@@ -36,32 +36,11 @@ class CsvImporter:
         rows = self.csv_file.rows
         if not rows :
             raise ValueError("Aucune donnée à importer")
-
-        import_log = []
-        errors_count = 0
-        success_count = 0
-        try:
-            frappe.db.begin()
-
-            doc = frappe.new_doc(self.doctype)
-            if hasattr(doc, "get_data_stack_importer") and callable(doc.import_data):
-                import_log,errors_count,success_count = doc.get_data_stack_importer().make_stack_import(rows, self.doctype)
-            else:
-                import_log, errors_count, success_count = self.make_default_import(rows)
-
-            if errors_count > 0:
-                raise ValueError(f"{errors_count} erreurs d'importation")
-
-            frappe.db.set_value("Import Csv", self.csv_import.name, "status", "Success")
-        except Exception as e:
-            frappe.db.rollback()
-            error_status = "Error" if success_count == 0 else "Partial Success"
-            frappe.db.set_value("Import Csv", self.csv_import.name, "status", error_status)
-            raise e
-        finally:
-            frappe.db.set_value("Import Csv", self.csv_import.name, "import_logs", json.dumps(import_log))
-            frappe.db.commit()
-            frappe.db.close()
+        doc = frappe.new_doc(self.doctype)
+        if hasattr(doc, "get_data_stack_importer") and callable(doc.import_data):
+            return doc.get_data_stack_importer().make_stack_import(rows, self.doctype)
+        else:
+            return self.make_default_import(rows)
             
 class Header:
     def __init__(self, raw_headers):
