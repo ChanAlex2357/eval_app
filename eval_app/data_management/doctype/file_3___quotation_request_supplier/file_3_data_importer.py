@@ -1,4 +1,4 @@
-from erpnext.erpnext.stock.doctype.material_request.material_request import make_request_for_quotation
+from erpnext.stock.doctype.material_request.material_reques import make_request_for_quotation
 from eval_app.data_management.doctype.import_csv.data_importer import DataImporter
 import frappe
 
@@ -17,14 +17,18 @@ class File3DataImporter(DataImporter):
 
         # Étape 2 : Traiter chaque groupe
         for ref, group in grouped_rows.items():
+        
+            # Dans ta boucle de ref :
             try:
                 mr = frappe.get_doc("Material Request", {"ref": ref})
+                if not mr :
+                    raise Exception(f"Aucun Materiel Request avec ref {ref}")
+                
                 if mr.docstatus != 0:
                     raise Exception(f"Material Request {ref} n'est pas en draft")
 
                 # Utilise la fonction existante pour générer le RFQ
                 rfq = make_request_for_quotation(source_name=mr.name)
-                rfq.insert(ignore_permissions=True)
 
                 # Ajoute les suppliers
                 for row in group:
@@ -32,12 +36,13 @@ class File3DataImporter(DataImporter):
                     if not frappe.db.exists("Supplier", supplier_name):
                         raise Exception(f"Supplier '{supplier_name}' introuvable")
 
+                    rfq.append()
                     frappe.get_doc({
                         "doctype": "Request For Quotation Supplier",
-                        "supplier": supplier_name,
-                        "request_for_quotation": rfq.name
-                    }).insert(ignore_permissions=True)
+                        "supplier": supplier_name
+                    })
 
+                rfq.insert(ignore_permissions=True)
                 rfq.submit()
 
             except Exception as e:

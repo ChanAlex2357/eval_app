@@ -8,7 +8,6 @@ from frappe.model.document import Document
 # Listes des tables et modules critiques à ne pas supprimer
 DEFAULT_TABLES = [
     "Supplier",
-    "Item",
     "Material Request",
     "Material Request Item",
     "Purchase Order",
@@ -18,6 +17,12 @@ DEFAULT_TABLES = [
     "Request for Quotation Supplier",
     "Supplier Quotation",
     "Supplier Quotation Item",
+    
+    # STOCK
+    "Item",
+    "Item Price",
+    "Stock Ledger Entry",
+    "Bin"
 ]
 DEFAULT_MODULES = [
 ]
