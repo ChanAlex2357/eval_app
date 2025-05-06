@@ -19,5 +19,14 @@ class EvalImporter:
         self.error_count = errors_count
         self.success_count = success_count
     
-    def commit_status():
-        pass
+    def commit_status(self):
+        self.import_file.set_status(self.status, self.logs)
+
+    def as_dict(self):
+        return {
+            "import_link":"http://erpnext.localhost:8000/app/import-csv/"+self.import_file.name,
+            "status": self.status,
+            "import_logs": self.logs,
+            "error_count": self.error_count,
+            "success_count": self.success_count
+        }
