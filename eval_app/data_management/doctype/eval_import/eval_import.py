@@ -17,16 +17,18 @@ class EvalImport(Document):
 
 		try:
 			import_file_1.start_import()
+			frappe.db.commit()
 		except Exception as e:
 			frappe.db.rollback()
+			raise e
 
-		return import_file_1.name
+		return import_file_1.import_file.name
 
 	def get_import_file_csv(self, file, ref_doctype):
 		import_doc : ImportCsv = frappe.new_doc("Import Csv")
 		import_doc.ref_doctype = ref_doctype
 		import_doc.file = file
-		frappe.msgprint(f"doctype : {import_doc.ref_doctype} , file : {import_doc.file}")
+
 		try :
 			import_doc.insert()
 		except Exception as e:
@@ -38,7 +40,7 @@ class EvalImport(Document):
 			raise Exception("Fichier 1 - vide")
 		import_file_1 =  self.get_import_file_csv(self.file_1, "File 1 - Material Request Import")
 
-		return EvalImporter(import_file_1)
+		return EvalImporter(import_file=import_file_1)
 
 	# TODO: implementation file 2
 	def get_file_2_import(self):
