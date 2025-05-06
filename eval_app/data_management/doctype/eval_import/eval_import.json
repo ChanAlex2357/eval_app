@@ -1,0 +1,77 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-05-06 15:25:24.228074",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_0sbd",
+  "file_1",
+  "file_2",
+  "file_3",
+  "start_import_btn",
+  "logs_section",
+  "files_logs_html"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_0sbd",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "file_1",
+   "fieldtype": "Attach",
+   "label": "File 1"
+  },
+  {
+   "fieldname": "file_2",
+   "fieldtype": "Attach",
+   "label": "File 2"
+  },
+  {
+   "fieldname": "file_3",
+   "fieldtype": "Attach",
+   "label": "File 3"
+  },
+  {
+   "fieldname": "start_import_btn",
+   "fieldtype": "Button",
+   "label": "Start Import"
+  },
+  {
+   "fieldname": "logs_section",
+   "fieldtype": "Section Break",
+   "label": "Logs"
+  },
+  {
+   "fieldname": "files_logs_html",
+   "fieldtype": "HTML",
+   "label": "Files Logs"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2025-05-06 15:39:30.653342",
+ "modified_by": "Administrator",
+ "module": "Data Management",
+ "name": "Eval Import",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}
