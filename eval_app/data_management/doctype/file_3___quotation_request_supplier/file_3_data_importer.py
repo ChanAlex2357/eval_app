@@ -30,9 +30,14 @@ class File3DataImporter(DataImporter):
                 try:
                     rfq = frappe.get_doc("Request for Quotation", {"ref": ref, "docstatus":0})
                     rfq.submit()
+
                     # Generer une supplier quotation
-                    sq = make_supplier_quotation_from_rfq(rfq.name)
-                    sq.insert()
+                    for supplier in rfq.suppliers:
+                        sq = make_supplier_quotation_from_rfq(
+                            source_name=rfq.name,
+                            for_supplier=supplier.supplier_name
+                        )
+                        sq.insert()
 
                 except Exception as e:
                     raise Exception(f"Erreur lors du submit pour la référence {ref} : {str(e)}")
