@@ -21,7 +21,7 @@ class File1DataImporter(DataImporter):
                 errors_count += 1
             
             ref = doc.ref  # Assure-toi que c’est bien une clé
-            if ref:
+            if ref: 
                 distinct_refs.add(ref)
 
         # Si aucune erreur, on soumet tous les Material Request liés
