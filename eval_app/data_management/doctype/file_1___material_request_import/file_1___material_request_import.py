@@ -32,7 +32,7 @@ class File1MaterialRequestImport(Document):
 
 	def import_material_request(self):
 
-		ref = str(self.ref)
+		ref = str(int(self.ref))
 		purpose = self.purpose
 		date = self.date  # format attendu : jj/mm/yyyy
 
