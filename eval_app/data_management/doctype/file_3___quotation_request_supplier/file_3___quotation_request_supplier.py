@@ -38,6 +38,7 @@ class File3QuotationRequestSupplier(Document):
 			mr = frappe.get_doc("Material Request", {"ref": ref, "docstatus":0})
 			if not mr :
 				raise Exception(f"Aucun Materiel Request avec ref {ref} pour le contexte de l'import")
+			mr.ref = "-"
 			mr.submit()
 
 			# Utilise la fonction existante pour générer le RFQ

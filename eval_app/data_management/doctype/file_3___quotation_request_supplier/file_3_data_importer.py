@@ -41,5 +41,21 @@ class File3DataImporter(DataImporter):
 
                 except Exception as e:
                     raise Exception(f"Erreur lors du submit pour la référence {ref} : {str(e)}")
+            # material_requests = frappe.get_all(
+            #     "Material Request",
+            #     filters={
+            #         "docstatus": 0,
+            #         "ref": ["!=", "-"]
+            #     },
+            #     fields=["name"]
+            # )
+
+            # for mr in material_requests:
+            #     if not mr:
+            #         raise Exception(f"MR SUBMIT ERROR : {mr}")
+            #     mr_doc = frappe.get_doc("Material Request", mr.name)
+            #     mr_doc.ref = "-"
+            #     mr_doc.submit()
+
 
         return import_log, errors_count, success_count
