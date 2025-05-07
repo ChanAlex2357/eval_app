@@ -47,7 +47,7 @@ class File3QuotationRequestSupplier(Document):
 			rfq = make_request_for_quotation(source_name=mr.name)
 			rfq.ref = ref
 		except Exception as e:
-			raise Exception(f" Erreur instanciation du Request for Quotation parent avec ref {ref} : {str(e)}")
+			raise Exception(f" Aucune Request for Quotation parent avec ref {ref} : {str(e)}")
 
 		return rfq
 
