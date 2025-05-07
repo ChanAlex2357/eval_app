@@ -28,16 +28,18 @@ class File3DataImporter(DataImporter):
         if errors_count == 0:
             for ref in distinct_refs:
                 try:
-                    rfq = frappe.get_doc("Request for Quotation", {"ref": ref, "docstatus":0})
-                    rfq.submit()
+                    existing = frappe.db.exists("Request for Quotation",{"ref":ref, "docstatus":0})
+                    if existing:
+                        rfq = frappe.get_doc("Request for Quotation", existing)
+                        rfq.submit()
 
-                    # Generer une supplier quotation
-                    for supplier in rfq.suppliers:
-                        sq = make_supplier_quotation_from_rfq(
-                            source_name=rfq.name,
-                            for_supplier=supplier.supplier_name
-                        )
-                        sq.insert()
+                        # Generer une supplier quotation
+                        for supplier in rfq.suppliers:
+                            sq = make_supplier_quotation_from_rfq(
+                                source_name=rfq.name,
+                                for_supplier=supplier.supplier_name
+                            )
+                            sq.insert()
 
                 except Exception as e:
                     raise Exception(f"Erreur lors du submit pour la référence {ref} : {str(e)}")
