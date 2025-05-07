@@ -1,6 +1,7 @@
 import frappe
 from frappe import _
 import traceback
+from erpnext.accounts.doctype.payment_entry.payment_entry import get_payment_entry
 
 class ApiResponse:
     def __init__(self, success=True, message="", data=None, errors=None):
@@ -128,6 +129,77 @@ def get_purchase_orders_with_invoices(supplier_name=None):
         return make_response(
             success=False,
             message=_("An error occurred while fetching data."),
-            errors=[traceback.format_exc()]
+            data = [],
+            errors = [traceback.format_exc()]
         )
 
+@frappe.whitelist()
+def make_payment_entry(paid_amount, doc_name):
+
+    try:
+        # pi = frappe.get_doc("Purchase Invoice", doc_name)
+        payment_entry = get_payment_entry(dt="Purchase Invoice" , dn = doc_name)
+
+        payment_entry.paid_amount = paid_amount
+        payment_entry.reference_no = doc_name
+
+        for reference in payment_entry.references:
+            reference.allocated_amount = paid_amount
+        payment_entry.submit()
+        frappe.db.commit()
+    except Exception as e:
+        frappe.db.rollback()
+
+    return make_response(True,"Payment effectuer",payment_entry)
+
+
+@frappe.whitelist()
+def get_request_quotation_list(supplier=None):
+
+    filters = None
+    if supplier :
+        filters = [["Request for Quotation Supplier","supplier_name","=",supplier]]
+
+    requests = frappe.db.get_list(
+        "Request for Quotation",
+        filters = filters,
+        fields = ["*"]
+    )
+    return make_response(True,"Request for Quotations",requests)
+
+@frappe.whitelist()
+def get_quotations_for_rfq(rfq_name, supplier=None):
+    """
+    Récupère les devis fournisseurs uniques pour une RFQ
+    Args:
+        rfq_name (str): Nom de la Request for Quotation
+        supplier (str, optional): Nom du fournisseur à filtrer
+    Returns:
+        dict: {success: bool, message: str, data: list}
+    """
+    # Initialisation du filtre de base
+    filters = {"request_for_quotation": rfq_name}
+    
+    # Ajout du filtre fournisseur si spécifié
+    if supplier:
+        filters["supplier"] = supplier
+    
+    # Récupération des devis
+    quotations = frappe.get_all(
+        "Supplier Quotation",
+        filters=filters,
+        fields=["name", "supplier", "grand_total", "status"],
+        # distinct=True  # Garantit l'unicité
+    )
+    
+    # Extraction des noms uniques
+    unique_names = list({q['name'] for q in quotations})
+    
+    return {
+        "success": True,
+        "message": f"Found {len(unique_names)} quotations for RFQ {rfq_name}" + 
+                  (f" (filtered by supplier: {supplier})" if supplier else ""),
+        "data": {
+            "unique_names": unique_names,
+        }
+    }
