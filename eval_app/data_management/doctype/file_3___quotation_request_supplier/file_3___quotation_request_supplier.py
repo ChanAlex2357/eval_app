@@ -35,9 +35,11 @@ class File3QuotationRequestSupplier(Document):
 			return frappe.get_doc("Request for Quotation",existing)
 		
 		try:
-			mr = frappe.get_doc("Material Request", {"ref": ref, "docstatus":0})
-			if not mr :
+			mr_exist = frappe.db.exists("Material Request", {"ref": ref, "docstatus":0})
+			if not mr_exist:
 				raise Exception(f"Aucun Materiel Request avec ref {ref} pour le contexte de l'import")
+			
+			mr = frappe.get_doc("Material Request", mr_exist)
 			mr.ref = "-"
 			mr.submit()
 
