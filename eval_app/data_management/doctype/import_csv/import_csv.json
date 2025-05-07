@@ -1,37 +1,100 @@
 {
  "actions": [],
  "allow_rename": 1,
- "creation": "2025-04-24 07:30:53.212175",
+ "autoname": "format:Import CSV {######}",
+ "creation": "2025-04-28 10:52:58.695064",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "section_break_az36",
-  "amended_from"
+  "section_break_hkhc",
+  "file",
+  "ref_doctype",
+  "date",
+  "status",
+  "start_import_btn",
+  "section_import_preview",
+  "import_preview",
+  "section_import_logs",
+  "import_logs",
+  "logs_preview"
  ],
  "fields": [
   {
-   "fieldname": "section_break_az36",
+   "fieldname": "section_break_hkhc",
    "fieldtype": "Section Break"
   },
   {
-   "fieldname": "amended_from",
+   "fieldname": "file",
+   "fieldtype": "Attach",
+   "label": "File",
+   "reqd": 1
+  },
+  {
+   "fieldname": "date",
+   "fieldtype": "Datetime",
+   "hidden": 1,
+   "in_list_view": 1,
+   "label": "Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "hidden": 1,
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Pending\nSuccess\nPartial Success\nError",
+   "read_only": 1
+  },
+  {
+   "fieldname": "start_import_btn",
+   "fieldtype": "Button",
+   "label": "Start Import",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_import_preview",
+   "fieldtype": "Section Break",
+   "label": "Preview"
+  },
+  {
+   "fieldname": "import_preview",
+   "fieldtype": "HTML",
+   "label": "Import Preview",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ref_doctype",
    "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Import Csv",
-   "print_hide": 1,
-   "read_only": 1,
-   "search_index": 1
+   "label": "Doctype",
+   "options": "DocType"
+  },
+  {
+   "fieldname": "section_import_logs",
+   "fieldtype": "Section Break",
+   "label": "Logs"
+  },
+  {
+   "fieldname": "import_logs",
+   "fieldtype": "Long Text",
+   "hidden": 1,
+   "label": "Logs Data",
+   "read_only": 1
+  },
+  {
+   "fieldname": "logs_preview",
+   "fieldtype": "HTML",
+   "label": "Logs Preview"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
- "is_submittable": 1,
  "links": [],
- "modified": "2025-04-24 07:30:53.212175",
+ "modified": "2025-05-06 13:17:44.099919",
  "modified_by": "Administrator",
  "module": "Data Management",
  "name": "Import Csv",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {
@@ -44,7 +107,6 @@
    "report": 1,
    "role": "System Manager",
    "share": 1,
-   "submit": 1,
    "write": 1
   }
  ],

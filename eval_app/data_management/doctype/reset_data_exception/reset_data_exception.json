@@ -1,0 +1,39 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:RDEXC{#####}",
+ "creation": "2025-04-24 11:25:24.014500",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_xet0",
+  "doc_name"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_xet0",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "doc_name",
+   "fieldtype": "Data",
+   "label": "Doc Name"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-04-24 20:30:19.546100",
+ "modified_by": "Administrator",
+ "module": "Data Management",
+ "name": "Reset Data Exception",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

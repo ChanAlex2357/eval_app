@@ -1,0 +1,74 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-04-24 08:18:20.985096",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_tvka",
+  "reset_button",
+  "logs",
+  "report_date",
+  "module"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_tvka",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "reset_button",
+   "fieldtype": "Button",
+   "in_filter": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1,
+   "label": "Reset"
+  },
+  {
+   "fieldname": "logs",
+   "fieldtype": "Long Text",
+   "label": "Logs",
+   "placeholder": "Detailled Logs",
+   "read_only": 1
+  },
+  {
+   "fieldname": "report_date",
+   "fieldtype": "Datetime",
+   "label": "Report Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "module",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Module",
+   "options": "Reset Data Module"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2025-05-06 00:07:06.737161",
+ "modified_by": "Administrator",
+ "module": "Data Management",
+ "name": "Reset Data",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}
