@@ -35,9 +35,11 @@ class File3QuotationRequestSupplier(Document):
 			return frappe.get_doc("Request for Quotation",existing)
 		
 		try:
-			mr = frappe.get_doc("Material Request", {"ref": ref, "docstatus":0})
-			if not mr :
+			mr_exist = frappe.db.exists("Material Request", {"ref": ref, "docstatus":0})
+			if not mr_exist:
 				raise Exception(f"Aucun Materiel Request avec ref {ref} pour le contexte de l'import")
+			
+			mr = frappe.get_doc("Material Request", mr_exist)
 			mr.ref = "-"
 			mr.submit()
 
@@ -45,7 +47,7 @@ class File3QuotationRequestSupplier(Document):
 			rfq = make_request_for_quotation(source_name=mr.name)
 			rfq.ref = ref
 		except Exception as e:
-			raise Exception(f" Erreur instanciation du Request for Quotation parent avec ref {ref} : {str(e)}")
+			raise Exception(f" Aucune Request for Quotation parent avec ref {ref} : {str(e)}")
 
 		return rfq
 
