@@ -1,7 +1,10 @@
 import frappe
 from frappe import _
 import traceback
+from eval_app.data_management.doctype.import_csv.csv_importer_service import make_row_import
 from erpnext.accounts.doctype.payment_entry.payment_entry import get_payment_entry
+from eval_app.data_management.doctype.file_1___material_request_import.file_1___material_request_import import File1DataImporter
+from erpnext.buying.doctype.request_for_quotation.request_for_quotation import make_supplier_quotation_from_rfq
 
 class ApiResponse:
     def __init__(self, success=True, message="", data=None, errors=None):
@@ -87,8 +90,8 @@ def get_purchase_orders_with_invoices(supplier_name=None):
 
         # Fetch Purchase Orders
         pos = frappe.get_all("Purchase Order", fields=["*"], filters=filters)
-
         for po in pos:
+            po["status"] +=" and Unpaid"
             # Query related Purchase Invoices through the 'items' child table
             invoices = frappe.db.get_all(
                 "Purchase Invoice",
@@ -98,21 +101,25 @@ def get_purchase_orders_with_invoices(supplier_name=None):
 
             total_paid = 0.0
             inv_len = len(invoices)
+            order_status = po["status"]
+            reste_a_payer = 0
 
             for inv in invoices:
                 paid = (inv["rounded_total"] or 0) - (inv["outstanding_amount"] or 0)
                 total_paid += paid
+                reste_a_payer += inv["outstanding_amount"] or 0
 
-            amount_to_paid = po.grand_total or 0
+            amount_to_paid = po.grand_total or 0.0
 
             # Determine custom payment status
-            if inv_len > 0 :
-                if amount_to_paid != total_paid:
-                    po["status"] +=" and Unpaid"
-                else:
+            if inv_len > 0 and amount_to_paid == total_paid:
                     po["status"] +=" and Paid"
 
-            po["invoices"] = invoices
+            po["invoices"] = {
+                "data":invoices,
+                "total_paid": total_paid,
+                "to_paid":amount_to_paid
+            }
 
 
         return make_response(
@@ -194,6 +201,20 @@ def get_quotations_for_rfq(rfq_name, supplier=None):
     
     # Extraction des noms uniques
     unique_names = list({q['name'] for q in quotations})
+    try :
+        if len(unique_names) == 0 :
+            sq = make_supplier_quotation_from_rfq(
+                source_name=rfq_name,
+                for_supplier=supplier
+            )
+            sq.insert()
+            frappe.db.commit()
+            unique_names.append(sq.name)
+    except Exception as e :
+        frappe.db.rollback()
+        frappe.log_error(e)
+    
+        
     
     return {
         "success": True,
@@ -203,3 +224,37 @@ def get_quotations_for_rfq(rfq_name, supplier=None):
             "unique_names": unique_names,
         }
     }
+
+def create_quotation(quotation_data = None):
+    if not quotation_data:
+        return make_response(False,"Quotation data missing")
+    
+    # Recuperation des donnees
+    supplier = quotation_data.supplier
+    date = quotation_data.date
+
+    items = quotation_data.items
+
+    items_docs = []
+    for item in items:
+        exist = frappe.db.exists("Item",)
+        items_docs.add( frappe.get)
+
+    row = {
+        
+    }
+
+    make_row_import(row, "File1MaterialRequestImport")
+    # TODO:Controle des donnee
+
+    # CREATION D'UN DOC DU FILE 1 ET ON IMPORT ou fonction annexe
+
+        # TODO:Creation d'une material_request
+
+        # TODO:Creation d'une request for quotation a partir d'une material request
+
+        # TODO:Creation d'une supplier quotation 
+
+    # NB: prevoir la reutilisateion des fonctions de file import
+    File1DataImporter 
+    return make_response(True, "Quotation Created")
