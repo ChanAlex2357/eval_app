@@ -26,13 +26,24 @@ DEFAULT_TABLES = [
     "Supplier Quotation",
     "Supplier Quotation Item",
 
-    # Purchase Invoice
+    # Purchase documents
     "Purchase Invoice",
     "Purchase Invoice Item",
+    "Purchase Receipt",
+    "Purchase Receipt Item",
+
+    # Sales documents
+    "Sales Invoice",
+    "Sales Invoice Item",
 
     # Payement
     "Payment Entry",
-    
+
+    # Accounting
+    "Journal Entry",
+    "Journal Entry Account",
+    "GL Entry",
+
     # STOCK
     "Item",
     "Item Price",
@@ -42,6 +53,7 @@ DEFAULT_TABLES = [
     # Import
     "Import Csv"
 ]
+
 DEFAULT_MODULES = [
 ]
 
