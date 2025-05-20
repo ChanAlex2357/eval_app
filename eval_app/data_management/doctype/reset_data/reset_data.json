@@ -8,8 +8,7 @@
   "section_break_tvka",
   "reset_button",
   "logs",
-  "report_date",
-  "module"
+  "report_date"
  ],
  "fields": [
   {
@@ -36,20 +35,13 @@
    "fieldtype": "Datetime",
    "label": "Report Date",
    "read_only": 1
-  },
-  {
-   "fieldname": "module",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Module",
-   "options": "Reset Data Module"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-05-06 00:07:06.737161",
+ "modified": "2025-05-20 07:58:56.244575",
  "modified_by": "Administrator",
  "module": "Data Management",
  "name": "Reset Data",
