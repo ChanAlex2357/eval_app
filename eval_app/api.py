@@ -64,7 +64,8 @@ def login(usr, pwd):
             "api_secret": api_secret,
             "username": user.username,
             "full_name":user.full_name,
-            "email": user.email
+            "email": user.email,
+            "roles":user.roles
         }
     )
 
