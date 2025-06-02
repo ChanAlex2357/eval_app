@@ -24,7 +24,6 @@ class ApiResponse:
 def make_response(success=True, message="", data=None, errors=None):
     return ApiResponse(success=success, message=message, data=data, errors=errors).as_dict()
 
-
 @frappe.whitelist(allow_guest=True)
 def login(usr, pwd):
     try:
