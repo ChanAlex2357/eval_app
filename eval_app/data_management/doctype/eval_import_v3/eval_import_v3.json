@@ -1,0 +1,60 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-06-02 22:38:04.569671",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_qyhp",
+  "emp_file",
+  "structure_file",
+  "salary_file"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_qyhp",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "emp_file",
+   "fieldtype": "Attach",
+   "label": "File 1 - Employee"
+  },
+  {
+   "fieldname": "structure_file",
+   "fieldtype": "Attach",
+   "label": "File 2 - Salary Structure"
+  },
+  {
+   "fieldname": "salary_file",
+   "fieldtype": "Attach",
+   "label": "File 3 - Salary Slip"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-06-02 22:39:26.727391",
+ "modified_by": "Administrator",
+ "module": "Data Management",
+ "name": "Eval Import V3",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

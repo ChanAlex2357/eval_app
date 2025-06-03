@@ -13,6 +13,7 @@
   - [ ] traitement des donnees
     - [ ] recuperation company
       - [ ] cree si inexistant
+      - [ ] Assigner holiday list par defaut "HL"
     - [ ] verification du nom et prenom non vide
     - [ ] genre existant ()
     - [ ] Date d'embauche - format de date

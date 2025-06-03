@@ -5,6 +5,8 @@ from eval_app.data_management.doctype.import_csv.csv_importer_service import mak
 from erpnext.accounts.doctype.payment_entry.payment_entry import get_payment_entry
 from eval_app.data_management.doctype.file_1___material_request_import.file_1___material_request_import import File1DataImporter
 from erpnext.buying.doctype.request_for_quotation.request_for_quotation import make_supplier_quotation_from_rfq
+from eval_app.data_management.doctype.eval_import_v3.eval_import_v3 import EvalImportV3
+
 
 class ApiResponse:
     def __init__(self, success=True, message="", data=None, errors=None):
@@ -174,6 +176,27 @@ def get_request_quotation_list(supplier=None):
     )
     return make_response(True,"Request for Quotations",requests)
 
+@frappe.whitelist(allow_guest=False)
+def remote_import():
+
+    files = frappe.request.files
+    emp_file = None
+    structure_file = None
+    salary_file = None
+    
+    evalV3 : EvalImportV3 = frappe.new_doc("Eval Import V3")
+    evalV3.setup_files(emp_file, structure_file, salary_file)
+
+    check, message = evalV3.check_files()
+    if not check:
+        return make_response(False, message,errors=files)
+    try:
+        return make_response(True, "Importing data from remote CSV files...")
+
+    except Exception as e:
+        frappe.log_error(f"Error in import_remote_csv_data: {traceback.format_exc()}")
+        return make_response(False, "An error occurred while importing data: {0}".format(str(e)))
+    
 @frappe.whitelist()
 def get_quotations_for_rfq(rfq_name, supplier=None):
     """
@@ -224,37 +247,3 @@ def get_quotations_for_rfq(rfq_name, supplier=None):
             "unique_names": unique_names,
         }
     }
-
-def create_quotation(quotation_data = None):
-    if not quotation_data:
-        return make_response(False,"Quotation data missing")
-    
-    # Recuperation des donnees
-    supplier = quotation_data.supplier
-    date = quotation_data.date
-
-    items = quotation_data.items
-
-    items_docs = []
-    for item in items:
-        exist = frappe.db.exists("Item",)
-        items_docs.add( frappe.get)
-
-    row = {
-        
-    }
-
-    make_row_import(row, "File1MaterialRequestImport")
-    # TODO:Controle des donnee
-
-    # CREATION D'UN DOC DU FILE 1 ET ON IMPORT ou fonction annexe
-
-        # TODO:Creation d'une material_request
-
-        # TODO:Creation d'une request for quotation a partir d'une material request
-
-        # TODO:Creation d'une supplier quotation 
-
-    # NB: prevoir la reutilisateion des fonctions de file import
-    File1DataImporter 
-    return make_response(True, "Quotation Created")
