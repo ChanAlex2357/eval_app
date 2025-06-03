@@ -19,6 +19,11 @@ class SalaryFile(Document):
 		except Exception as e:
 			eg.add_error(e)
 
+		try:
+			mois = self.process_mois()
+		except Exception as e:
+			eg.add_error(e)
+
 		if eg.has_errors():
 			raise eg
 		
@@ -34,6 +39,8 @@ class SalaryFile(Document):
 			raise Exception(f"Employee with ref {self.ref_employe} not found")
 		return frappe.get_doc("Employee",existing)
 
+	def process_mois(self):
+		return process_date(self.mois, "Mois")
 
 	def process_assignement(self, emp, salary_sturcture, mois, salaire_base):
 		pass
