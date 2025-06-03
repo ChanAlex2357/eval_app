@@ -3,13 +3,14 @@
 
 import frappe
 from eval_app.data_management.utils import *
+import datetime
+from frappe.utils import getdate
 from frappe.model.document import Document
-from hrms.payroll.doctype.salary_structure.salary_structure import assign_salary_structure_for_employees
+from hrms.payroll.doctype.salary_structure.salary_structure import assign_salary_structure_for_employees, make_salary_slip
 
 class SalaryFile(Document):
 	def import_data(self):
 		eg:ExceptionGroup = ExceptionGroup("Exception Group at Salary File")
-
 		mois = None
 		emp = None
 		salaire_base = None
@@ -67,18 +68,6 @@ class SalaryFile(Document):
 		return frappe.get_doc("Salary Structure", existing)
 
 	def process_assignement(self, emp, salary_sturcture, mois, salaire_base):
-
-		# def create_salary_structure_assignment(
-			# employee,
-			# salary_structure,
-			# company,
-			# currency,
-			# from_date,
-			# payroll_payable_account=None,
-			# base=None,
-			# variable=None,
-			# income_tax_slab=None,
-		# )
 		try:
 			assign_salary_structure_for_employees(
 				employees=[emp],
@@ -89,3 +78,16 @@ class SalaryFile(Document):
 		except Exception as e:
 			raise Exception(f"Cannot create salary assignement for {emp.firstname} {emp.lastname} to {salary_sturcture.name} on {mois} : {str(e)}")
 
+		try:
+			salary_slip = make_salary_slip(
+				source_name=salary_sturcture.name,
+				employee=emp.name,
+				posting_date=getdate(datetime.date.today()),
+			)
+
+			salary_slip.start_date = mois
+			salary_slip.insert()
+			salary_slip.submit()
+			
+		except Exception as e:
+			raise Exception(f"Cannot create salary slip for {emp.firstname} {emp.lastname} to {salary_sturcture.name} on {mois} : {str(e)}")
