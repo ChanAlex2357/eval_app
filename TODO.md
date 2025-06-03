@@ -11,26 +11,26 @@
 - [ ] doctype conforme au fichier 1
   - [x] model
   - [x] fonction import data
-  - [ ] traitement des donnees
+  - [x] traitement des donnees
     - [x] recuperation company
       - [x] cree si inexistant
       - [x] Assigner holiday list par defaut "HL"
-    - [ ] verification du nom et prenom non vide
-    - [ ] genre existant ()
-    - [ ] Date d'embauche - format de date
-    - [ ] date de naissance - format de date
-    - [ ] cree instance d'un employee et inserer
-  - [ ] tester import sur erpnext
+    - [x] verification du nom et prenom non vide
+    - [x] genre existant ()
+    - [x] Date d'embauche - format de date
+    - [x] date de naissance - format de date
+    - [x] cree instance d'un employee et inserer
+  - [x] tester import sur erpnext
   - [ ] api upload fichier et activation de l'import a distance
 - [ ] doctype conforme au fichier 2
-  - [ ] fonction import data
+  - [x] fonction import data
   - [ ] traitement des donnees
-    - [ ] salary - verifier si structure existante sinon cree
-    - [ ] company - verifier si companie existante
+    - [x] company - verifier si companie existante
+    - [x] salary - verifier si structure existante sinon cree
     - [ ] type - verifier si type valide
-    - [ ] valeur - verifier si formule coherente
-    - [ ] verifier si name non vide
-    - [ ] verifier si abbr non vide
+    - [x] valeur - verifier si formule coherente
+    - [x] verifier si name non vide
+    - [x] verifier si abbr non vide
     - [ ] cree instance d'un component asigner a une structure et inserer
   - [ ] validation de toutes les structures
   - [ ] tester import sur erpnext
