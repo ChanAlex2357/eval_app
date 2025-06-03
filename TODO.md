@@ -24,15 +24,15 @@
   - [ ] api upload fichier et activation de l'import a distance
 - [ ] doctype conforme au fichier 2
   - [x] fonction import data
-  - [ ] traitement des donnees
+  - [x] traitement des donnees
     - [x] company - verifier si companie existante
     - [x] salary - verifier si structure existante sinon cree
-    - [ ] type - verifier si type valide
+    - [x] type - verifier si type valide
     - [x] valeur - verifier si formule coherente
     - [x] verifier si name non vide
     - [x] verifier si abbr non vide
-    - [ ] cree instance d'un component asigner a une structure et inserer
-  - [ ] validation de toutes les structures
+    - [x] cree instance d'un component asigner a une structure et inserer
+  - [x] validation de toutes les structures
   - [ ] tester import sur erpnext
   - [ ] api upload fichier et activation de l'import a distance
 
