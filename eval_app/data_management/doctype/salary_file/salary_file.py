@@ -4,7 +4,7 @@
 import frappe
 from eval_app.data_management.utils import *
 from frappe.model.document import Document
-
+from hrms.payroll.doctype.salary_structure.salary_structure import assign_salary_structure_for_employees
 
 class SalaryFile(Document):
 	def import_data(self):
@@ -26,6 +26,11 @@ class SalaryFile(Document):
 
 		try:
 			salaire_base = self.process_salary_amount()
+		except Exception as e:
+			eg.add_error(e)
+
+		try:
+			salary_structure = self.process_salary_structure(emp)
 		except Exception as e:
 			eg.add_error(e)
 
@@ -51,7 +56,36 @@ class SalaryFile(Document):
 		salary = parse_quantity(self.salaire_base)
 
 		return salary
+	
+	def process_salary_structure(self, emp):
+		if emp == None:
+			raise Exception("Cannot check the salary structure without valid Employee")
+		
+		existing = frappe.db.exists("Salary Structure",{"name":self.salaire,"company":emp.company})
+		if not existing:
+			raise Exception(f"Aucune Salary Structure trouver pour '{self.salaire}' dans la company '{emp.company}'")
+		return frappe.get_doc("Salary Structure", existing)
 
 	def process_assignement(self, emp, salary_sturcture, mois, salaire_base):
-		pass
+
+		# def create_salary_structure_assignment(
+			# employee,
+			# salary_structure,
+			# company,
+			# currency,
+			# from_date,
+			# payroll_payable_account=None,
+			# base=None,
+			# variable=None,
+			# income_tax_slab=None,
+		# )
+		try:
+			assign_salary_structure_for_employees(
+				employees=[emp],
+				salary_structure=salary_sturcture,
+				from_date=mois,
+				base=salaire_base
+			)
+		except Exception as e:
+			raise Exception(f"Cannot create salary assignement for {emp.firstname} {emp.lastname} to {salary_sturcture.name} on {mois} : {str(e)}")
 

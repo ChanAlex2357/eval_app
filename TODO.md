@@ -40,10 +40,10 @@
   - [ ] fonction import data
   - [ ] traitement des donnees
     - [ ] mois
-      - [ ] format de date
+      - [x] format de date
       - [ ] debut du mois
-    - [ ] recuperer employee selon ref
-    - [ ] validation numerique du salaire
+    - [x] recuperer employee selon ref
+    - [x] validation numerique du salaire
     - [ ] recuperer Salaire Structure
       - [ ] verifier si structure existante
       - [ ] verifier si component Salaire Base existant
