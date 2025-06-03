@@ -51,8 +51,8 @@ class EmployeeFile(Document):
 		try :
 			emp = frappe.get_doc({
 				"doctype":"Employee",
-				"first_name":prenom,
-				"last_name":nom,
+				"last_name":prenom,
+				"first_name":nom,
 				"company":company,
 				"date_of_joining":date_embauche,
 				"date_of_birth":date_naissance,
@@ -73,15 +73,19 @@ class EmployeeFile(Document):
 		if existing :
 			return frappe.get_doc("Company",existing)
 		
-		company_doc = frappe.get_doc({
-			"doctype":"Company",
-			"country":"Madagascar",
-			"company_name":self.company,
-			"default_currency":"EUR",
-			"default_holiday_list":"HL"
-		})
-		company_doc.insert()
-		return company_doc
+		try :
+			company_doc = frappe.get_doc({
+				"doctype":"Company",
+				"country":"Madagascar",
+				"company_name":self.company,
+				"default_currency":"EUR",
+				"default_holiday_list":"HL"
+			})
+			company_doc.insert()
+			return company_doc
+		except Exception as e:
+			frappe.log_error(title=f"Import {self.name} Employee.Company",message=traceback.format_exc())
+			raise Exception(f"Cannot create Company {self.company} : {str(e)}")
 		
 	def process_full_name(self):
 		check_void_str(self.nom, "Nom")
@@ -98,7 +102,16 @@ class EmployeeFile(Document):
 	def process_genre(self):
 		check_void_str(self.genre, "Genre")
 
-		existing = frappe.db.exists("Genre", self.genre)
-		if not existing:
-			raise Exception(f"Aucun Genre {self.genre} n'existe")
-		return frappe.get_doc("Genre",existing)
+		existing = frappe.db.exists("Gender", self.genre)
+		if existing:
+			return frappe.get_doc("Gender",existing)
+		try:
+			genre_doc = frappe.get_doc({"doctype":"Gender","gender":self.genre})
+			genre_doc.insert()
+			return genre_doc
+		except Exception as e:
+			frappe.log_error(
+				title = f"Import {self.name} Employee.Genre",
+				message = traceback.format_exc()
+			)
+			raise Exception(f"Cannot create Gender {self.genre} : {str(e)}")

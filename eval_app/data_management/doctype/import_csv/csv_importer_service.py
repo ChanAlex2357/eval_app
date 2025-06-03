@@ -19,7 +19,7 @@ def make_row_import(row, dt):
         return {
             "row_num": row.row_num,
             "status": "Success",
-            "message": f"Importation réussie la ligne {row.row_num}",
+            "message": [f"Importation réussie la ligne {row.row_num}"],
             "exception": None
         },True,doc
     except ExceptionGroup as eg:
