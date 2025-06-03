@@ -1,5 +1,6 @@
 
 import frappe
+from eval_app.data_management.utils import ExceptionGroup
 
 def make_row_import(row, dt):
     row_data = row.as_dict()
@@ -21,11 +22,18 @@ def make_row_import(row, dt):
             "message": f"Importation réussie la ligne {row.row_num}",
             "exception": None
         },True,doc
-
+    except ExceptionGroup as eg:
+        return {
+            "row_num": row.row_num,
+            "error_count":eg.errors.__len__(),
+            "status": "Error",
+            "message": eg.getErrorDict(),
+            "exception": frappe.get_traceback()
+        },False,doc
     except Exception as e:
         return {
             "row_num": row.row_num,
             "status": "Error",
-            "message": str(e),
+            "message": [str(e)],
             "exception": frappe.get_traceback()
         },False,doc

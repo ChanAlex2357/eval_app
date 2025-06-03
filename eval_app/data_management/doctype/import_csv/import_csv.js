@@ -28,11 +28,13 @@ frappe.ui.form.on("Import Csv", {
 			freeze_message: __("Importing..."),
 		}).then((r) => {
 			if (r.message === true) {
-                frm.refresh();
+                // frm.refresh();
 			}
             else{
-                frm.refresh()
-            }
+
+			}
+		}).finally(()=>{
+			frm.refresh()
 		});
 	},
 
@@ -100,6 +102,15 @@ frappe.ui.form.on("Import Csv", {
 	
 		logs.forEach(log => {
 			const hasException = log.exception && log.exception !== "null" && log.exception !== null;
+			const messages = log.message
+			let print_msg = "<ul>"
+
+			messages.forEach(msg => {
+				print_msg += `<li>${msg}</li>`
+			})
+
+			print_msg += "</ul>"
+
 			const row = $(`
 				<tr>
 					<td>
@@ -107,7 +118,7 @@ frappe.ui.form.on("Import Csv", {
 						${hasException ?`<span class="badge badge-danger p-1"> </span>`:`<span class="badge badge-success p-1"> </span>`}
 					</td>
 					<td>
-						<div>${log.message}</div>
+						<div>${print_msg}</div>
 						${hasException ? `
 							<button class="btn btn-link p-0 mt-1 toggle-exception text-danger" style="font-size: 0.9em;">Afficher l'erreur</button>
 							<pre class="exception-detail d-none bg-light border p-2 mt-1" style="white-space: pre-wrap;">${log.exception}</pre>
