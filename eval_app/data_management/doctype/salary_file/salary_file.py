@@ -24,6 +24,11 @@ class SalaryFile(Document):
 		except Exception as e:
 			eg.add_error(e)
 
+		try:
+			salaire_base = self.process_salary_amount()
+		except Exception as e:
+			eg.add_error(e)
+
 		if eg.has_errors():
 			raise eg
 		
@@ -41,6 +46,11 @@ class SalaryFile(Document):
 
 	def process_mois(self):
 		return process_date(self.mois, "Mois")
+	
+	def process_salary_amount(self):
+		salary = parse_quantity(self.salaire_base)
+
+		return salary
 
 	def process_assignement(self, emp, salary_sturcture, mois, salaire_base):
 		pass
