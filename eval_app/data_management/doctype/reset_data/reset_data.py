@@ -54,11 +54,11 @@ DEFAULT_TABLES = [
     # "Import Csv",
     # == RH ==
 
-    "Employee",
+    # "Employee",
     "Salary Slip",
-    "Salary Structure",
+    # "Salary Structure",
     "Salary Structure Assignment", 
-    "Salary Component",
+    # "Salary Component",
 ]
 
 DEFAULT_MODULES = [
