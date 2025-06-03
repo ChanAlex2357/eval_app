@@ -36,6 +36,8 @@ class ImportCsv(Document):
 		try:
 			frappe.db.set_value("Import Csv", self.name, "status", status_str)
 			frappe.db.set_value("Import Csv", self.name, "import_logs", json.dumps(logs))
+			# frappe.db.set_value("Import Csv", self.name, "import_logs", json.dumps({"logs":logs}))
+			# self.import_logs = json.dumps({"logs":(logs)})
 		except Exception as e:
 			raise Exception("Erreur lors de la mise a jour du status de l'import : "+str(e))
 	def get_status(self, status):

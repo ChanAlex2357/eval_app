@@ -3,13 +3,14 @@
 ## Import de donnee
 
 - [ ] rajouter tables dans reinitialisation des donnees
-  - [ ] employee
-  - [ ] salary slip
-  - [ ] salary structure
-  - [ ] salary strucutre assignement
+  - [x] employee
+  - [x] salary slip
+  - [x] salary structure
+  - [x] salary strucutre assignement
   - [ ] company sauf si company = "Itu Eval"
 - [ ] doctype conforme au fichier 1
-  - [ ] fonction import data
+  - [x] model
+  - [x] fonction import data
   - [ ] traitement des donnees
     - [ ] recuperation company
       - [ ] cree si inexistant
