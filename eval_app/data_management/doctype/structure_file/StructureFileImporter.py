@@ -29,7 +29,7 @@ class StructureFileImporter(DataImporter):
                 existing = frappe.db.exists("Salary Structure",{"name":ref, "docstatus":0})
                 if existing:
                     sst = frappe.get_doc("Salary Structure", existing)
-                    # sst.submit()
+                    sst.submit()
             except Exception as e:
                 raise Exception(f"Cannot submit Salary Structure with name '{ref}' : {str(e)}")
 

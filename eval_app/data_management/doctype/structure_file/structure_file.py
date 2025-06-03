@@ -28,39 +28,39 @@ class StructureFile(Document):
 		except Exception as e:
 			eg.add_error(e)
 		
-		# try :
-		# 	component_name = self.process_name()
-		# except Exception as e:
-		# 	eg.add_error(e)
+		try :
+			component_name = self.process_name()
+		except Exception as e:
+			eg.add_error(e)
 		
-		# try:
-		# 	abbr = self.process_abbr()
-		# except Exception as e:
-		# 	eg.add_error(e)
+		try:
+			abbr = self.process_abbr()
+		except Exception as e:
+			eg.add_error(e)
 
-		# try:
-		# 	component_type = self.process_type()
-		# except Exception as e:
-		# 	eg.add_error(e)
+		try:
+			component_type = self.process_type()
+		except Exception as e:
+			eg.add_error(e)
 
-		# try:
-		# 	valeur = self.process_formula()
-		# except Exception as e:
-		# 	eg.add_error(e)
+		try:
+			valeur = self.process_formula()
+		except Exception as e:
+			eg.add_error(e)
 
-		# try :
-		# 	component_doc = self.process_component(component_name,abbr,component_type,valeur)
-		# except Exception as e:
-		# 	eg.add_error(e)
+		try :
+			component_doc = self.process_component(component_name,abbr,component_type,valeur)
+		except Exception as e:
+			eg.add_error(e)
 	
 		if eg.has_errors() :
 			raise eg
 
-		# try :
-		# 	self.process_relation(salary_structure_doc, component_doc)
-		# except Exception as e:
-		# 	eg.add_error(e)
-		# 	raise eg
+		try :
+			self.process_relation(salary_structure_doc, component_doc)
+		except Exception as e:
+			eg.add_error(e)
+			raise eg
 
 	# == Fucntion to process the structure parent ==
 	def process_company(self):
@@ -71,22 +71,18 @@ class StructureFile(Document):
 
 	def process_salary_structure(self):
 		company = self.process_company()
-		existing = frappe.db.exists(
-			"Salary Strucutre",
-			self.salary_structure
-		)
+		existing = frappe.db.exists("Salary Structure", self.salary_structure)
 		if existing :
 			return frappe.get_doc("Salary Structure", existing)
 		structure_doc = None
 		try:
-			structure_doc = frappe.new_doc("Salary Structure")
-			structure_doc.name = self.salary_structure,
-			structure_doc[company] = company.name
+			structure_doc = frappe.get_doc({"doctype":"Salary Structure","name":self.salary_structure})
+			structure_doc.company = company.name
 			structure_doc.insert()
-			structure_doc.save()
-			return structure_doc
 		except Exception as e:
-			raise Exception(f"Cannot create Salary Structure {self.salary_structure},{company.name} || {frappe.db.exists("Salary Strucutre",self.salary_structure)} ; {structure_doc} : {str(e)}")
+			frappe.log_error(title="Salary Structure import initialisation ", message=traceback.format_exc())
+			raise Exception(f"Cannot create Salary Structure {self.salary_structure},{company.name} : {str(e)}")
+		return structure_doc
 
 	# == Function to process the component == 
 
@@ -113,49 +109,47 @@ class StructureFile(Document):
 		return comp_type.capitalize()
 	
 	def process_component(self, component_name, abbr, component_type, valeur):
-		existing = frappe.db.exists(
-			"Salary Component",
-			{
-				"salary_component":component_name,
-				"type":component_type,
-				"abbr":abbr,
-				"formula":valeur
-			}
-		)
+		existing = frappe.db.exists("Salary Component",component_name)
 		if existing:
 			return frappe.get_doc("Salary Component",existing)
 		
+		depends_on_payment_days = True
+		if valeur != "base":
+			depends_on_payment_days = False
 		salary_component_doc = frappe.get_doc(
 			{
 				"doctype":"Salary Component",
 				"salary_component":component_name,
 				"type":component_type,
-				"abbr":abbr,
-				"formula":valeur
+				"salary_component_abbr":abbr,
+				"formula":valeur,
+				"amount_based_on_formula":True,
+				"depends_on_payment_days":depends_on_payment_days
 			}
 		)
 		salary_component_doc.insert()
 		return salary_component_doc
 
-	def process_relation(self, salary_structure, salary_component):		
+	def process_relation(self, salary_structure, salary_component):				
+		cat = None
 		
-		def process_relation_type(salary_structure,salary_component):
-			if (salary_component.type == 'earning') and (salary_component in salary_structure.earnings):
-				raise Exception(f"Salary Component {salary_component.name} est deja comprise dans les gains de {salary_structure.name} de la company {salary_structure.company}")
-			elif salary_component.type == "earning":
-				salary_structure.earnings.append(salary_component)
+		if (salary_component.type == 'Earning') and (salary_component in salary_structure.earnings):
+			raise Exception(f"Salary Component {salary_component.name} est deja comprise dans les gains de {salary_structure.name} de la company {salary_structure.company}")
+		elif salary_component.type == "Earning":
+			cat = "earnings"
 
-			if (salary_component.type == 'deduction') and (salary_component in salary_structure.deductions):
-				raise Exception(f"Salary Component {salary_component.name} est deja comprise dans les deductions de {salary_structure.name}")
-			elif salary_component.type == "deduction":
-				salary_structure.deductions.append(salary_component)
-			salary_component.save()
-		
-		process_relation_type(salary_structure, salary_component)
+		if (salary_component.type == 'Deduction') and (salary_component in salary_structure.deductions):
+			raise Exception(f"Salary Component {salary_component.name} est deja comprise dans les deductions de {salary_structure.name}")
+		elif salary_component.type == "Deduction":
+			cat = "deductions"
 
 		try:
+			if cat is not None :
+				salary_structure.append(cat,{
+					"salary_component":salary_component.name,
+					"formula":salary_component.formula,
+					"amount_based_on_formula":salary_component.amount_based_on_formula
+				})
 			salary_structure.save()
 		except Exception as e:
-			raise Exception(f"Cannot save the Salary Strucutre {salary_structure.name} in company {salary_structure.company} with component {salary_component.name} as {salary_component.type}")
-
-
+			raise Exception(f"Cannot save the Salary Structure {salary_structure.name} in company {salary_structure.company} with component {salary_component.name} as {salary_component.type} : {str(e)}")

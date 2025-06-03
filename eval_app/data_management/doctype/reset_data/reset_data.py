@@ -51,7 +51,7 @@ DEFAULT_TABLES = [
     "Bin",
 
     # Import
-    "Import Csv",
+    # "Import Csv",
     # == RH ==
 
     "Employee",
