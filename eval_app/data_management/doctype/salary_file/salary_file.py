@@ -8,7 +8,7 @@ from frappe.model.document import Document
 
 class SalaryFile(Document):
 	def import_data(self):
-		eg:ExceptionGroup = ExceptionGroup()
+		eg:ExceptionGroup = ExceptionGroup("Exception Group at Salary File")
 
 		mois = None
 		emp = None
@@ -31,7 +31,7 @@ class SalaryFile(Document):
 	def process_emp(self):
 		existing = frappe.db.exists("Employee",{"emp_ref":self.ref_employe})
 		if not existing:
-			raise Exception(f"Employee with ref {self.ref_employee} not found")
+			raise Exception(f"Employee with ref {self.ref_employe} not found")
 		return frappe.get_doc("Employee",existing)
 
 

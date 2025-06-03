@@ -179,7 +179,7 @@ def reset_data(module=None):
         frappe.db.begin()
         
         logs = reset_default_modules()
-        delete_custom_company()
+        # delete_custom_company()
         
         # Commit explicite après succès
         frappe.db.commit()
