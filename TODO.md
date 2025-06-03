@@ -37,19 +37,19 @@
   - [ ] api upload fichier et activation de l'import a distance
 
 - [ ] doctype conforme au fichier 3
-  - [ ] fonction import data
-  - [ ] traitement des donnees
+  - [x] fonction import data
+  - [x] traitement des donnees
     - [ ] mois
       - [x] format de date
       - [ ] debut du mois
     - [x] recuperer employee selon ref
     - [x] validation numerique du salaire
-    - [ ] recuperer Salaire Structure
-      - [ ] verifier si structure existante
-      - [ ] verifier si component Salaire Base existant
-    - [ ] cree un salary slip avec component Salaire Base amount = salaire
-    - [ ] validation du salary slip
-  - [ ] tester import sur erpnext
+    - [x] recuperer Salaire Structure
+      - [x] verifier si structure existante
+      - [x] verifier si component Salaire Base existant
+    - [x] cree un salary slip avec component Salaire Base amount = salaire
+    - [x] validation du salary slip
+  - [x] tester import sur erpnext
   - [ ] api upload fichier et activation de l'import a distance
 
 - [ ] grouper les 3 doctype dans un seul import
