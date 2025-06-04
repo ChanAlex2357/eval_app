@@ -18,6 +18,7 @@ class EvalImportV3(Document):
 			frappe.db.set_value("Eval Import V3", self.name, "logs_data", json.dumps(logs))
 		except Exception as e:
 			frappe.throw(f"An error occurred during saving logs: {str(e)}")
+		return logs
 
 	def setup_files(self, emp_file, structure_file, salary_file):
 		self.emp_file = emp_file

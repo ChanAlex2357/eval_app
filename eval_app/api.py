@@ -214,9 +214,9 @@ def remote_import():
             return make_response(False, message, errors=files)
 
         # 🚀 Début import
-        frappe.enqueue("eval_app.data_management.doctype.eval_import_v3.eval_import_v3.EvalImportV3.start_files_import", queue='default', job_name="Import CSV via API", now=True, is_async=False, **{"self": eval_v3})
+        result = eval_v3.start_files_import()
         
-        return make_response(True, "Import lancé avec succès depuis l'API.", data={"import_id": eval_v3.name})
+        return make_response(True, "Import lancé avec succès depuis l'API.", data=result)
 
     except Exception as e:
         frappe.log_error(f"Erreur pendant l'import API remote :\n{traceback.format_exc()}")

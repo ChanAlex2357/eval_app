@@ -52,6 +52,7 @@ DEFAULT_TABLES = [
 
     # Import
     "Import Csv",
+    "Eval Import V3"
     # == RH ==
 
     "Employee",
