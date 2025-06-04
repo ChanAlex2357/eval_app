@@ -8,7 +8,10 @@
   "section_break_qyhp",
   "emp_file",
   "structure_file",
-  "salary_file"
+  "salary_file",
+  "start_button",
+  "logs_section",
+  "html_logs"
  ],
  "fields": [
   {
@@ -29,12 +32,27 @@
    "fieldname": "salary_file",
    "fieldtype": "Attach",
    "label": "File 3 - Salary Slip"
+  },
+  {
+   "fieldname": "start_button",
+   "fieldtype": "Button",
+   "label": "Start Import"
+  },
+  {
+   "fieldname": "logs_section",
+   "fieldtype": "Section Break",
+   "label": "Logs"
+  },
+  {
+   "fieldname": "html_logs",
+   "fieldtype": "HTML",
+   "label": "Html Logs"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-06-02 22:39:26.727391",
+ "modified": "2025-06-04 09:03:33.044239",
  "modified_by": "Administrator",
  "module": "Data Management",
  "name": "Eval Import V3",

@@ -6,6 +6,7 @@ from eval_app.data_management.utils import *
 import datetime
 from frappe.utils import getdate
 from frappe.model.document import Document
+from hrms.payroll.doctype.salary_slip.salary_slip import SalarySlip 
 from hrms.payroll.doctype.salary_structure.salary_structure import assign_salary_structure_for_employees, make_salary_slip
 
 class SalaryFile(Document):
@@ -76,18 +77,17 @@ class SalaryFile(Document):
 				base=salaire_base
 			)
 		except Exception as e:
-			raise Exception(f"Cannot create salary assignement for {emp.firstname} {emp.lastname} to {salary_sturcture.name} on {mois} : {str(e)}")
+			raise Exception(f"Cannot create salary assignement for {emp.first_name} {emp.last_name} to {salary_sturcture.name} on {mois} : {str(e)}")
 
 		try:
-			salary_slip = make_salary_slip(
+			salary_slip:SalarySlip = make_salary_slip(
 				source_name=salary_sturcture.name,
 				employee=emp.name,
-				posting_date=getdate(datetime.date.today()),
+				posting_date=getdate(mois),
 			)
 
 			salary_slip.start_date = mois
 			salary_slip.insert()
 			salary_slip.submit()
-			
 		except Exception as e:
-			raise Exception(f"Cannot create salary slip for {emp.firstname} {emp.lastname} to {salary_sturcture.name} on {mois} : {str(e)}")
+			raise Exception(f"Cannot create salary slip for {emp.first_name} {emp.last_name} to {salary_sturcture.name} on {mois} : {str(e)}")
