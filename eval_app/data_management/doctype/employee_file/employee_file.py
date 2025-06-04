@@ -10,6 +10,7 @@ import traceback
 class EmployeeFile(Document):
 	def import_data(self):
 		eg = ExceptionGroup("Exception group at EmployeeFile")
+		ref = None
 		company = None
 		nom  = None
 		prenom = None
@@ -17,6 +18,10 @@ class EmployeeFile(Document):
 		date_naissance = None
 		genre = None
 
+		try:
+			ref = self.process_ref()
+		except Exception as e:
+			eg.add_error(e)
 		# Company Process
 		try:
 			company = self.process_company()
@@ -56,7 +61,8 @@ class EmployeeFile(Document):
 				"company":company,
 				"date_of_joining":date_embauche,
 				"date_of_birth":date_naissance,
-				"gender":genre
+				"gender":genre,
+				"emp_ref":ref
 			})
 			emp.insert()
 		except Exception as e :
@@ -66,6 +72,10 @@ class EmployeeFile(Document):
         	)
 			eg.add_error(e)
 			raise eg
+
+	def process_ref(self):
+		check_void_str(self.ref, "Employee Ref")
+		return self.ref
 
 	def process_company(self):
 		# Verifier l'existance de company

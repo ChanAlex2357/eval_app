@@ -28,11 +28,13 @@ frappe.ui.form.on("Import Csv", {
 			freeze_message: __("Importing..."),
 		}).then((r) => {
 			if (r.message === true) {
-                // frm.refresh();
+                frm.refresh();
 			}
             else{
-
+                frm.refresh();
 			}
+		}).catch((err) => {
+			frm.refresh();
 		}).finally(()=>{
 			frm.refresh()
 		});
