@@ -51,7 +51,15 @@ DEFAULT_TABLES = [
     "Bin",
 
     # Import
-    "Import Csv"
+    "Import Csv",
+    "Eval Import V3"
+    # == RH ==
+
+    "Employee",
+    "Salary Slip",
+    "Salary Structure",
+    "Salary Structure Assignment", 
+    "Salary Component",
 ]
 
 DEFAULT_MODULES = [
@@ -92,6 +100,17 @@ def delete_table_data(doctype):
         # return True
     # return False
 
+def delete_custom_company():
+    """Supprime les données de la société personnalisée"""
+    try:
+        frappe.db.sql("SET SQL_SAFE_UPDATES = 0")
+        frappe.db.sql("DELETE FROM `tabCompany` WHERE name NOT LIKE 'Itu Eval'")
+        frappe.db.sql("SET SQL_SAFE_UPDATES = 1")
+        frappe.db.commit()
+        return True
+    except Exception as e:
+        frappe.log_error(f"Erreur lors de la suppression de la société personnalisée: {e}")
+        return False
 
 # ─────────────────────────────────────────────────────────────
 # FONCTIONS DE RÉINITIALISATION
@@ -161,6 +180,7 @@ def reset_data(module=None):
         frappe.db.begin()
         
         logs = reset_default_modules()
+        delete_custom_company()
         
         # Commit explicite après succès
         frappe.db.commit()

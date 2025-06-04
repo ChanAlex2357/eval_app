@@ -49,7 +49,11 @@ class Header:
 
     def _normalize_headers(self, headers):
         # Normalisation simple (peut être améliorée)
-        return [h.strip().lower().replace(" ", "_") for h in headers]
+        norm_headers = [h.strip().lower().replace(" ", "_") for h in headers]
+        # for i in range(norm_headers.__len__()):
+        #     if norm_headers[i] == 'name':
+        #         norm_headers[i] = "name_1"
+        return norm_headers
 
     def get_fields(self):
         return self.normalized_headers
