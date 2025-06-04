@@ -27,6 +27,7 @@ class EvalImporter:
     def as_dict(self):
         return {
             "import_link":"http://erpnext.localhost:8000/app/import-csv/"+self.import_file.name,
+            "import_name":self.import_file.name,
             "status": self.status,
             "import_logs": self.logs,
             "error_count": self.error_count,
