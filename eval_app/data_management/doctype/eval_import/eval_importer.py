@@ -30,3 +30,11 @@ class EvalImporter:
             "error_count": self.error_count,
             "success_count": self.success_count
         }
+
+def get_resutlt_report(self,imports=None):
+    if not imports:
+        return {}
+    logs = {}
+    for i in range(len(imports)):
+        logs.__setitem__("file_"+str(i+1),imports[i].as_dict())		
+    return logs
