@@ -51,14 +51,14 @@ DEFAULT_TABLES = [
     "Bin",
 
     # Import
-    # "Import Csv",
+    "Import Csv",
     # == RH ==
 
-    # "Employee",
+    "Employee",
     "Salary Slip",
-    # "Salary Structure",
+    "Salary Structure",
     "Salary Structure Assignment", 
-    # "Salary Component",
+    "Salary Component",
 ]
 
 DEFAULT_MODULES = [
@@ -179,7 +179,7 @@ def reset_data(module=None):
         frappe.db.begin()
         
         logs = reset_default_modules()
-        # delete_custom_company()
+        delete_custom_company()
         
         # Commit explicite après succès
         frappe.db.commit()

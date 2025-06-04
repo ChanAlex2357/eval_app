@@ -3,7 +3,7 @@
 
 frappe.ui.form.on("Eval Import V3", {
 	refresh(frm) {
-
+		frm.trigger("preview_logs");
 	},
 
     start_import_btn(frm){
@@ -22,8 +22,12 @@ frappe.ui.form.on("Eval Import V3", {
 			frm.events.show_global_import_summary(frm,r.message)
 		});
 	},
+	preview_logs(frm){
+		frm.events.show_global_import_summary(frm, JSON.parse(frm.doc.logs_data));
+	}
+	,
 	show_global_import_summary(frm, summary_data) {
-		const container = frm.get_field("files_logs_html").$wrapper;
+		const container = frm.get_field("html_logs").$wrapper;
 		container.empty();
 	
 		if (!summary_data || Object.keys(summary_data).length === 0) {

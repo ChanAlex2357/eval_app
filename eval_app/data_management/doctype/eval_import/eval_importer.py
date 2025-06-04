@@ -1,5 +1,6 @@
 
 import frappe
+from eval_app.data_management.doctype.import_csv.import_csv import get_import_file_csv
 
 class EvalImporter:
     def __init__(
@@ -31,6 +32,13 @@ class EvalImporter:
             "error_count": self.error_count,
             "success_count": self.success_count
         }
+
+def make_importer(file, ref_doctype):
+    """
+    Factory function to create an EvalImporter instance.
+    """
+    import_file = get_import_file_csv(file, ref_doctype)
+    return EvalImporter(import_file=import_file)
 
 def get_resutlt_report(imports=None):
     if not imports:

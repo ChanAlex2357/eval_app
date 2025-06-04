@@ -12,7 +12,8 @@
   "salary_file",
   "start_import_btn",
   "logs_section",
-  "html_logs"
+  "html_logs",
+  "logs_data"
  ],
  "fields": [
   {
@@ -48,12 +49,18 @@
    "fieldname": "start_import_btn",
    "fieldtype": "Button",
    "label": "Start Import"
+  },
+  {
+   "fieldname": "logs_data",
+   "fieldtype": "JSON",
+   "hidden": 1,
+   "label": "Logs Data"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-06-04 09:39:18.713191",
+ "modified": "2025-06-04 10:14:22.049619",
  "modified_by": "Administrator",
  "module": "Data Management",
  "name": "Eval Import V3",

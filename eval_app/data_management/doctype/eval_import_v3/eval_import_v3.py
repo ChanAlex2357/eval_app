@@ -3,18 +3,21 @@
 
 import frappe
 from frappe.model.document import Document
-from eval_app.data_management.doctype.import_csv.import_csv import get_import_file_csv
-from eval_app.data_management.doctype.eval_import.eval_importer import process_stack_imports
-
+from eval_app.data_management.doctype.eval_import.eval_importer import process_stack_imports, make_importer
+import json
 
 class EvalImportV3(Document):
 	def start_files_import(self):
 		imports = []
-		imports.append(get_import_file_csv(self.emp_file, "Employee File"))
-		imports.append(get_import_file_csv(self.structure_file, "Structure File"))
-		imports.append(get_import_file_csv(self.salary_file, "Salary File"))
+		imports.append(make_importer(self.emp_file, "Employee File"))
+		imports.append(make_importer(self.structure_file, "Structure File"))
+		imports.append(make_importer(self.salary_file, "Salary File"))
 
-		return process_stack_imports(imports)
+		logs = process_stack_imports(imports)
+		try:
+			frappe.db.set_value("Eval Import V3", self.name, "logs_data", json.dumps(logs))
+		except Exception as e:
+			frappe.throw(f"An error occurred during saving logs: {str(e)}")
 
 	def setup_files(self, emp_file, structure_file, salary_file):
 		self.emp_file = emp_file
