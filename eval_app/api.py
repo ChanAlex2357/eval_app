@@ -194,9 +194,11 @@ def remote_import():
         eval_v3.insert()
 
         # 🗂️ Upload des fichiers dans public/files
-        emp_uploaded = save_file(emp_file.filename, emp_file.stream, eval_v3.doctype, eval_v3.name, is_private=False)
-        struct_uploaded = save_file(structure_file.filename, structure_file.stream, eval_v3.doctype, eval_v3.name, is_private=False)
-        salary_uploaded = save_file(salary_file.filename, salary_file.stream, eval_v3.doctype, eval_v3.name, is_private=False)
+        emp_uploaded = save_file(emp_file.filename, emp_file.stream.read(), eval_v3.doctype, eval_v3.name, is_private=False)
+
+        struct_uploaded = save_file(structure_file.filename, structure_file.stream.read(), eval_v3.doctype, eval_v3.name, is_private=False)
+        
+        salary_uploaded = save_file(salary_file.filename, salary_file.stream.read(), eval_v3.doctype, eval_v3.name, is_private=False)
 
         # 🧩 Mise en place des chemins pour traitement
         eval_v3.setup_files(
