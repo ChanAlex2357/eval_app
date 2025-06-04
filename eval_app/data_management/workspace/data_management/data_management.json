@@ -1,7 +1,7 @@
 {
  "app": "eval_app",
  "charts": [],
- "content": "[{\"id\":\"QVzgiItfM5\",\"type\":\"header\",\"data\":{\"text\":\"<span style=\\\"font-size: 16px;\\\">Page de manipulation des donnees de ERPNext</span>\",\"col\":12}},{\"id\":\"rM-qiy433v\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Reset Data\",\"col\":3}},{\"id\":\"jNoq8Lhkjo\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"New Import Csv\",\"col\":3}},{\"id\":\"OnTySEWIw9\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Import List\",\"col\":3}},{\"id\":\"vCNJHPp6BE\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Import Form\",\"col\":3}},{\"id\":\"jm8vdp_HJd\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"8VclNb1o6P\",\"type\":\"card\",\"data\":{\"card_name\":\"Reset Data\",\"col\":3}},{\"id\":\"ZQkmI-EvyA\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Reset Modules\",\"col\":9}}]",
+ "content": "[{\"id\":\"QVzgiItfM5\",\"type\":\"header\",\"data\":{\"text\":\"<span style=\\\"font-size: 16px;\\\">Reinitialisation des donnees</span>\",\"col\":12}},{\"id\":\"rM-qiy433v\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Reset Data\",\"col\":3}},{\"id\":\"jm8vdp_HJd\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"NGVN3n0T1y\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Importation de donnne <br></b></span>\",\"col\":12}},{\"id\":\"jNoq8Lhkjo\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"New Import Csv\",\"col\":3}},{\"id\":\"OnTySEWIw9\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Import List\",\"col\":3}},{\"id\":\"vCNJHPp6BE\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Import Form\",\"col\":3}},{\"id\":\"YIVwtJQYLT\",\"type\":\"spacer\",\"data\":{\"col\":12}}]",
  "creation": "2025-04-24 08:12:42.438741",
  "custom_blocks": [],
  "docstatus": 0,
@@ -14,38 +14,8 @@
  "is_hidden": 0,
  "label": "Data Management",
  "link_type": "DocType",
- "links": [
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Reset Data",
-   "link_count": 2,
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Reset",
-   "link_count": 0,
-   "link_to": "Reset Data",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Resetable Module",
-   "link_count": 0,
-   "link_to": "Reset Data Module",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  }
- ],
- "modified": "2025-05-06 17:23:53.624635",
+ "links": [],
+ "modified": "2025-06-04 09:59:25.184130",
  "modified_by": "Administrator",
  "module": "Data Management",
  "name": "Data Management",
@@ -53,13 +23,7 @@
  "owner": "Administrator",
  "parent_page": "",
  "public": 1,
- "quick_lists": [
-  {
-   "document_type": "Reset Data Module",
-   "label": "Reset Modules",
-   "quick_list_filter": "[]"
-  }
- ],
+ "quick_lists": [],
  "roles": [],
  "sequence_id": 23.0,
  "shortcuts": [
