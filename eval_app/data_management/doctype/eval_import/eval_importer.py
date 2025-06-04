@@ -31,7 +31,7 @@ class EvalImporter:
             "success_count": self.success_count
         }
 
-def get_resutlt_report(self,imports=None):
+def get_resutlt_report(imports=None):
     if not imports:
         return {}
     logs = {}

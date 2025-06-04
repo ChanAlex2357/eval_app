@@ -96,7 +96,7 @@ def get_html_preview(
 	di: ImportCsv = frappe.get_doc("Import Csv", import_name)
 	return di.get_html_preview(import_file)
 
-def get_import_file_csv(self, file, ref_doctype):
+def get_import_file_csv(file, ref_doctype):
 	import_doc : ImportCsv = frappe.new_doc("Import Csv")
 	import_doc.ref_doctype = ref_doctype
 	import_doc.file = file
