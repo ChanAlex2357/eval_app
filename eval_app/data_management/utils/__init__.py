@@ -17,6 +17,10 @@ class ExceptionGroup(Exception):
     def add_error(self, exception:Exception = None):
         self.errors.append(exception)
         self.errors_messages.append(str(exception))
+    
+    def checkpoint(self):
+        if self.has_errors:
+            raise self
 
 
 def check_void_str(value, col_name):

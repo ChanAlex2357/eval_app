@@ -6,7 +6,7 @@ from erpnext.accounts.doctype.payment_entry.payment_entry import get_payment_ent
 from eval_app.data_management.doctype.file_1___material_request_import.file_1___material_request_import import File1DataImporter
 from erpnext.buying.doctype.request_for_quotation.request_for_quotation import make_supplier_quotation_from_rfq
 from eval_app.data_management.doctype.eval_import_v3.eval_import_v3 import EvalImportV3
-
+from frappe.utils.file_manager import save_file
 
 class ApiResponse:
     def __init__(self, success=True, message="", data=None, errors=None):
@@ -180,22 +180,47 @@ def get_request_quotation_list(supplier=None):
 def remote_import():
 
     files = frappe.request.files
-    emp_file = None
-    structure_file = None
-    salary_file = None
-    
-    evalV3 : EvalImportV3 = frappe.new_doc("Eval Import V3")
-    evalV3.setup_files(emp_file, structure_file, salary_file)
+    emp_file = files.get("emp_file")
+    structure_file = files.get("structure_file")
+    salary_file = files.get("salary_file")
 
-    check, message = evalV3.check_files()
-    if not check:
-        return make_response(False, message,errors=files)
     try:
-        return make_response(True, "Importing data from remote CSV files...")
+
+        # 🧱 Vérification initiale
+        if not emp_file or not structure_file or not salary_file:
+            return make_response(False, "Tous les fichiers requis n'ont pas été fournis.", errors=files)
+
+        eval_v3 : EvalImportV3 = frappe.new_doc("Eval Import V3")
+        eval_v3.insert()
+
+        # 🗂️ Upload des fichiers dans public/files
+        emp_uploaded = save_file(emp_file.filename, emp_file.stream.read(), eval_v3.doctype, eval_v3.name, is_private=False)
+
+        struct_uploaded = save_file(structure_file.filename, structure_file.stream.read(), eval_v3.doctype, eval_v3.name, is_private=False)
+        
+        salary_uploaded = save_file(salary_file.filename, salary_file.stream.read(), eval_v3.doctype, eval_v3.name, is_private=False)
+
+        # 🧩 Mise en place des chemins pour traitement
+        eval_v3.setup_files(
+            emp_file=emp_uploaded.get("file_url"),
+            structure_file=struct_uploaded.get("file_url"),
+            salary_file=salary_uploaded.get("file_url")
+        )
+
+
+        # ✅ Vérification des fichiers (logique métier)
+        check, message = eval_v3.check_files()
+        if not check:
+            return make_response(False, message, errors=files)
+
+        # 🚀 Début import
+        result = eval_v3.start_files_import()
+        
+        return make_response(True, "Import lancé avec succès depuis l'API.", data=result)
 
     except Exception as e:
-        frappe.log_error(f"Error in import_remote_csv_data: {traceback.format_exc()}")
-        return make_response(False, "An error occurred while importing data: {0}".format(str(e)))
+        frappe.log_error(f"Erreur pendant l'import API remote :\n{traceback.format_exc()}")
+        return make_response(False, f"Erreur : {str(e)}")
     
 @frappe.whitelist()
 def get_quotations_for_rfq(rfq_name, supplier=None):

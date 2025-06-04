@@ -1,7 +1,7 @@
 {
  "app": "eval_app",
  "charts": [],
- "content": "[{\"id\":\"QVzgiItfM5\",\"type\":\"header\",\"data\":{\"text\":\"<span style=\\\"font-size: 16px;\\\">Reinitialisation des donnees</span>\",\"col\":12}},{\"id\":\"rM-qiy433v\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Reset Data\",\"col\":3}},{\"id\":\"jm8vdp_HJd\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"NGVN3n0T1y\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Importation de donnne <br></b></span>\",\"col\":12}},{\"id\":\"jNoq8Lhkjo\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"New Import Csv\",\"col\":3}},{\"id\":\"OnTySEWIw9\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Import List\",\"col\":3}},{\"id\":\"vCNJHPp6BE\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Import Form\",\"col\":3}}]",
+ "content": "[{\"id\":\"QVzgiItfM5\",\"type\":\"header\",\"data\":{\"text\":\"<span style=\\\"font-size: 16px;\\\">Reinitialisation des donnees</span>\",\"col\":12}},{\"id\":\"rM-qiy433v\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Reset Data\",\"col\":3}},{\"id\":\"jm8vdp_HJd\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"NGVN3n0T1y\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Importation de donnne <br></b></span>\",\"col\":12}},{\"id\":\"jNoq8Lhkjo\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"New Import Csv\",\"col\":3}},{\"id\":\"OnTySEWIw9\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Import List\",\"col\":3}},{\"id\":\"vCNJHPp6BE\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Import Form\",\"col\":3}},{\"id\":\"YIVwtJQYLT\",\"type\":\"spacer\",\"data\":{\"col\":12}}]",
  "creation": "2025-04-24 08:12:42.438741",
  "custom_blocks": [],
  "docstatus": 0,
@@ -15,7 +15,7 @@
  "label": "Data Management",
  "link_type": "DocType",
  "links": [],
- "modified": "2025-05-20 08:01:53.442391",
+ "modified": "2025-06-04 09:59:25.184130",
  "modified_by": "Administrator",
  "module": "Data Management",
  "name": "Data Management",

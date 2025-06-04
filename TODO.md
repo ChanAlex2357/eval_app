@@ -24,32 +24,32 @@
   - [ ] api upload fichier et activation de l'import a distance
 - [ ] doctype conforme au fichier 2
   - [x] fonction import data
-  - [ ] traitement des donnees
+  - [x] traitement des donnees
     - [x] company - verifier si companie existante
     - [x] salary - verifier si structure existante sinon cree
-    - [ ] type - verifier si type valide
+    - [x] type - verifier si type valide
     - [x] valeur - verifier si formule coherente
     - [x] verifier si name non vide
     - [x] verifier si abbr non vide
-    - [ ] cree instance d'un component asigner a une structure et inserer
-  - [ ] validation de toutes les structures
+    - [x] cree instance d'un component asigner a une structure et inserer
+  - [x] validation de toutes les structures
   - [ ] tester import sur erpnext
   - [ ] api upload fichier et activation de l'import a distance
 
 - [ ] doctype conforme au fichier 3
-  - [ ] fonction import data
-  - [ ] traitement des donnees
+  - [x] fonction import data
+  - [x] traitement des donnees
     - [ ] mois
-      - [ ] format de date
+      - [x] format de date
       - [ ] debut du mois
-    - [ ] recuperer employee selon ref
-    - [ ] validation numerique du salaire
-    - [ ] recuperer Salaire Structure
-      - [ ] verifier si structure existante
-      - [ ] verifier si component Salaire Base existant
-    - [ ] cree un salary slip avec component Salaire Base amount = salaire
-    - [ ] validation du salary slip
-  - [ ] tester import sur erpnext
+    - [x] recuperer employee selon ref
+    - [x] validation numerique du salaire
+    - [x] recuperer Salaire Structure
+      - [x] verifier si structure existante
+      - [x] verifier si component Salaire Base existant
+    - [x] cree un salary slip avec component Salaire Base amount = salaire
+    - [x] validation du salary slip
+  - [x] tester import sur erpnext
   - [ ] api upload fichier et activation de l'import a distance
 
 - [ ] grouper les 3 doctype dans un seul import

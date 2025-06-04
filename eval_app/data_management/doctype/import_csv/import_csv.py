@@ -96,3 +96,13 @@ def get_html_preview(
 	di: ImportCsv = frappe.get_doc("Import Csv", import_name)
 	return di.get_html_preview(import_file)
 
+def get_import_file_csv(file, ref_doctype):
+	import_doc : ImportCsv = frappe.new_doc("Import Csv")
+	import_doc.ref_doctype = ref_doctype
+	import_doc.file = file
+
+	try :
+		import_doc.insert()
+	except Exception as e:
+		raise Exception(f"Cannot instanciate and save New Import csv whith file doctype '{ref_doctype}' from : {file} ")
+	return import_doc

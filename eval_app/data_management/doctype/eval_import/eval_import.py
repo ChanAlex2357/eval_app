@@ -4,8 +4,8 @@
 import frappe
 import json
 from frappe.model.document import Document
-from eval_app.data_management.doctype.import_csv.import_csv import ImportCsv
-from eval_app.data_management.doctype.eval_import.eval_importer import EvalImporter
+from eval_app.data_management.doctype.import_csv.import_csv import ImportCsv, get_import_file_csv
+from eval_app.data_management.doctype.eval_import.eval_importer import EvalImporter, get_resutlt_report
 
 class EvalImport(Document):
 	def start_files_import(self):
@@ -35,34 +35,13 @@ class EvalImport(Document):
 			for import_file in imports:
 				import_file.commit_status()
 			frappe.db.commit()
-			return self.get_resutlt_report(imports)
+			return get_resutlt_report(imports)
 
-
-		
-
-	def get_resutlt_report(self,imports=None):
-		if not imports:
-			return {}
-		logs = {}
-		for i in range(len(imports)):
-			logs.__setitem__("file_"+str(i+1),imports[i].as_dict())		
-		return logs
-
-	def get_import_file_csv(self, file, ref_doctype):
-		import_doc : ImportCsv = frappe.new_doc("Import Csv")
-		import_doc.ref_doctype = ref_doctype
-		import_doc.file = file
-
-		try :
-			import_doc.insert()
-		except Exception as e:
-			raise Exception(f"Cannot instanciate and save New Import csv whith file doctype '{ref_doctype}' from : {file} ")
-		return import_doc
 
 	def get_file_1_import(self):
 		if not self.file_1 :
 			raise Exception("Fichier 1 - vide")
-		import_file_1 =  self.get_import_file_csv(self.file_1, "File 1 - Material Request Import")
+		import_file_1 =  get_import_file_csv(self.file_1, "File 1 - Material Request Import")
 
 		return EvalImporter(import_file=import_file_1)
 
@@ -70,7 +49,7 @@ class EvalImport(Document):
 	def get_file_2_import(self):
 		if not self.file_2 :
 			raise Exception("Fichier 2 - vide")
-		import_file_2 =  self.get_import_file_csv(self.file_2, "File 2 - Supplier Import")
+		import_file_2 =  get_import_file_csv(self.file_2, "File 2 - Supplier Import")
 
 		return EvalImporter(import_file_2)
 	
@@ -78,7 +57,7 @@ class EvalImport(Document):
 	def get_file_3_import(self):
 		if not self.file_3 :
 			raise Exception("Fichier 3 - vide")
-		import_file_3 =  self.get_import_file_csv(self.file_3, "File 3 - Quotation Request Supplier")
+		import_file_3 =  get_import_file_csv(self.file_3, "File 3 - Quotation Request Supplier")
 
 		return EvalImporter(import_file_3)
 

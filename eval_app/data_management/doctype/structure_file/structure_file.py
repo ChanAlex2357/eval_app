@@ -14,7 +14,7 @@ class StructureFile(Document):
 		return StructureFileImporter()
 
 	def import_data(self):
-		eg = ExceptionGroup("Exception group at EmployeeFile")
+		eg = ExceptionGroup("Exception group at Structure File")
 		salary_structure_doc = None
 		component_doc = None
 
