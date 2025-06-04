@@ -15,7 +15,7 @@ frappe.ui.form.on("Eval Import V3", {
     start_import(frm) {
 		frm.call({
 			method: "form_start_import",
-			args: { import_name: frm.doc.name },
+			args: { source: frm.doc.name },
 			freeze: true,
 			freeze_message: __("Importing..."),
 		}).then((r) => {

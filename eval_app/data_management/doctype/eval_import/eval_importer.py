@@ -1,4 +1,5 @@
 
+import frappe
 
 class EvalImporter:
     def __init__(
@@ -38,3 +39,27 @@ def get_resutlt_report(imports=None):
     for i in range(len(imports)):
         logs.__setitem__("file_"+str(i+1),imports[i].as_dict())		
     return logs
+
+def process_stack_imports(imports):
+    frappe.db.commit()
+
+    try:
+        frappe.db.begin()
+
+        sum_status = 0
+        for import_file in imports:
+            import_file.start_import()
+            sum_status += import_file.status
+        if sum_status != 3:
+            raise Exception("Failed to import data")
+
+        frappe.db.commit()
+    except Exception as e:
+        frappe.db.rollback()
+        raise e
+    finally:
+        # commit status of import file
+        for import_file in imports:
+            import_file.commit_status()
+        frappe.db.commit()
+        return get_resutlt_report(imports)
