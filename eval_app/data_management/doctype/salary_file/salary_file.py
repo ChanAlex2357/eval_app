@@ -40,7 +40,8 @@ class SalaryFile(Document):
 			raise eg
 		
 		try:
-			salary_structure = self.process_assignement(emp, salary_structure, mois, salaire_base)
+			self.process_assignement(emp, salary_structure, mois, salaire_base)
+			self.process_salary_slip(emp, salary_structure, mois)
 		except Exception as e:
 			eg.add_error(e)
 			raise eg
@@ -68,17 +69,7 @@ class SalaryFile(Document):
 			raise Exception(f"Aucune Salary Structure trouver pour '{self.salaire}' dans la company '{emp.company}'")
 		return frappe.get_doc("Salary Structure", existing)
 
-	def process_assignement(self, emp, salary_sturcture, mois, salaire_base):
-		try:
-			assign_salary_structure_for_employees(
-				employees=[emp],
-				salary_structure=salary_sturcture,
-				from_date=mois,
-				base=salaire_base
-			)
-		except Exception as e:
-			raise Exception(f"Cannot create salary assignement for {emp.first_name} {emp.last_name} to {salary_sturcture.name} on {mois} : {str(e)}")
-
+	def process_salary_slip(self, emp, salary_sturcture, mois):
 		try:
 			salary_slip:SalarySlip = make_salary_slip(
 				source_name=salary_sturcture.name,
@@ -91,3 +82,15 @@ class SalaryFile(Document):
 			salary_slip.submit()
 		except Exception as e:
 			raise Exception(f"Cannot create salary slip for {emp.first_name} {emp.last_name} to {salary_sturcture.name} on {mois} : {str(e)}")
+
+	def process_assignement(self, emp, salary_sturcture, mois, salaire_base):
+		try:
+			assign_salary_structure_for_employees(
+				employees=[emp],
+				salary_structure=salary_sturcture,
+				from_date=mois,
+				base=salaire_base
+			)
+		except Exception as e:
+			raise Exception(f"Cannot create salary assignement for {emp.first_name} {emp.last_name} to {salary_sturcture.name} on {mois} : {str(e)}")
+
