@@ -111,6 +111,11 @@ class EmployeeFile(Document):
 	
 	def process_genre(self):
 		check_void_str(self.genre, "Genre")
+		if(self.genre == "Masculin"):
+			self.genre = "Male"
+
+		if(self.genre == "Feminin"):
+			self.genre = "Female"
 
 		existing = frappe.db.exists("Gender", self.genre)
 		if existing:

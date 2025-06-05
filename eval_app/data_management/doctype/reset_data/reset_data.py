@@ -55,11 +55,12 @@ DEFAULT_TABLES = [
     "Eval Import V3"
     # == RH ==
 
-    "Employee",
+    
     "Salary Slip",
     "Salary Structure",
     "Salary Structure Assignment", 
     "Salary Component",
+    "Employee",
 ]
 
 DEFAULT_MODULES = [

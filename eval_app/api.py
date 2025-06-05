@@ -193,6 +193,7 @@ def remote_import():
         eval_v3 : EvalImportV3 = frappe.new_doc("Eval Import V3")
         eval_v3.insert()
 
+
         # 🗂️ Upload des fichiers dans public/files
         emp_uploaded = save_file(emp_file.filename, emp_file.stream.read(), eval_v3.doctype, eval_v3.name, is_private=False)
 
@@ -214,7 +215,9 @@ def remote_import():
             return make_response(False, message, errors=files)
 
         # 🚀 Début import
+        eval_v3.save()
         result = eval_v3.start_files_import()
+        
         
         return make_response(True, "Import lancé avec succès depuis l'API.", data=result)
 
