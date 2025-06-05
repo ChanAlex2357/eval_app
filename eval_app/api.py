@@ -298,15 +298,25 @@ def get_salary_slip_with_details(employee=None,start_date=None, end_date=None):
             fields=["name"],
             filters=filters,
         )
-
+        sum_earnings = 0
+        sum_deductions = 0
+        sum_net_pay = 0
         for slip in salary_slips:
             slip = frappe.get_doc("Salary Slip",slip.name)
             data.append(slip.as_dict())
+            sum_earnings += slip.gros_pay
+            sum_deductions += slip.total_deduction
+            sum_net_pay += slip.net_pay
 
         return make_response(
             success=True,
             message=_("Fetched salary slips successfully."),
-            data=data
+            data={
+                "salaries":data,
+                "sum_earnings":sum_earnings,
+                "sum_deductions":sum_deductions,
+                "sum_salary":sum_net_pay
+            }
         )
 
     except Exception as e:
