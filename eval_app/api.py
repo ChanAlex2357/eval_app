@@ -275,3 +275,47 @@ def get_quotations_for_rfq(rfq_name, supplier=None):
             "unique_names": unique_names,
         }
     }
+
+
+@frappe.whitelist()
+def get_salary_slip_with_details(employee=None,start_date=None, end_date=None):
+    """
+    Récupère les fiches de paie avec les détails des employés et des structures de salaire.
+    Returns:
+        dict: {success: bool, message: str, data: list}
+    """
+    try:
+        data = []
+        filters = {}
+        if employee:
+            filters["employee"] = employee
+        if start_date:
+            filters["start_date"] = [">=", start_date]
+        if end_date:
+            filters["end_date"] = ["<=", end_date]
+        salary_slips = frappe.get_all(
+            "Salary Slip",
+            fields=["name"],
+            filters=filters,
+        )
+
+        for slip in salary_slips:
+            slip = frappe.get_doc("Salary Slip",slip.name)
+            data.append(slip.as_dict())
+
+        return make_response(
+            success=True,
+            message=_("Fetched salary slips successfully."),
+            data=data
+        )
+
+    except Exception as e:
+        frappe.log_error(
+            title="Error fetching salary slips",
+            message=traceback.format_exc()
+        )
+        return make_response(
+            success=False,
+            message=_("An error occurred while fetching salary slips."),
+            errors=[traceback.format_exc()]
+        )
