@@ -8,6 +8,7 @@ from erpnext.buying.doctype.request_for_quotation.request_for_quotation import m
 from eval_app.data_management.doctype.eval_import_v3.eval_import_v3 import EvalImportV3
 from frappe.utils.file_manager import save_file
 from eval_app.data_management.doctype.reset_data.reset_data import reset_data
+from collections import defaultdict
 from hrms.payroll.doctype.payroll_entry.payroll_entry import get_end_date
 
 class ApiResponse:
@@ -308,8 +309,12 @@ def get_salary_annual(year = 2025):
             months.append({
                 "period":month_name,
                 "start_date":start_date,
-                "end_date":end_date,
-                "salaries":month_data
+                "end_date":end_date,    # Info Mois
+                "total_earnings":month_data.get("sum_earnings"),        # total gains
+                "total_deductions":month_data.get("sum_deductions"),    # total deductions
+                "total_salary":month_data.get("sum_salary"),            # total Salaire du mois
+                "components":month_data.get("components"),
+                "salaries":month_data.get("salaries"),                  # Les details du salaire du mois
             })
 
         return make_response(True,f"Data fetched for {year}",{
@@ -330,41 +335,57 @@ def filter_salary_slip(employee=None, employee_name=None,start_date=None, end_da
     Returns:
         dict: {success: bool, message: str, data: list}
     """
-    try:
-        data = []
-        filters = {}
-        if employee:
-            filters["employee"] = employee
-        if employee_name:
-            filters["employee_name"] = employee_name
-        if start_date:
-            filters["start_date"] = [">=", start_date]
-        if end_date:
-            filters["end_date"] = ["<=", end_date]
-        salary_slips = frappe.get_all(
-            "Salary Slip",
-            fields=["name"],
-            filters=filters,
-        )
-        sum_earnings = 0
-        sum_deductions = 0
-        sum_net_pay = 0
-        for slip in salary_slips:
-            slip = frappe.get_doc("Salary Slip",slip.name) #
-            data.append(slip.as_dict()) # liste des salary slip compris dans la periode
-            sum_earnings += slip.gross_pay  # calcul somme earnings
-            sum_deductions += slip.total_deduction # calcul somme deductions
-            sum_net_pay += slip.net_pay # calcul somme salaire net
+    data = []
+    filters = {}
+    if employee:
+        filters["employee"] = employee
+    if employee_name:
+        filters["employee_name"] = employee_name
+    if start_date:
+        filters["start_date"] = [">=", start_date]
+    if end_date:
+        filters["end_date"] = ["<=", end_date]
+    salary_slips = frappe.get_all(
+        "Salary Slip",
+        fields=["name"],
+        filters=filters,
+    )
+    sum_earnings = 0
+    sum_deductions = 0
+    sum_net_pay = 0
+    earnings = defaultdict(float)
+    deductions = defaultdict(float)
 
-        return {
-                "sum_earnings":sum_earnings,
-                "sum_deductions":sum_deductions,
-                "sum_salary":sum_net_pay,
-                "salaries":data,
+    for slip in salary_slips:
+        slip = frappe.get_doc("Salary Slip",slip.name) #
+        data.append(slip.as_dict()) # liste des salary slip compris dans la periode
+        sum_earnings += slip.gross_pay  # calcul somme earnings
+        sum_deductions += slip.total_deduction # calcul somme deductions
+        sum_net_pay += slip.net_pay # calcul somme salaire net
+
+        for earn in slip.earnings :
+            component_name = earn.salary_component
+            curr_val = earnings.pop(component_name, 0)
+            curr_val += earn.amount
+            earnings.__setitem__(component_name, curr_val)
+
+        for deduct in slip.deductions :
+            component_name = deduct.salary_component
+            curr_val = deductions.pop(component_name, 0)
+            curr_val += deduct.amount
+            deductions.__setitem__(component_name, curr_val)
+
+    return {
+            "sum_earnings":sum_earnings,
+            "sum_deductions":sum_deductions,
+            "sum_salary":sum_net_pay,
+            "salaries":data,
+            "components":{
+                "earnings":earnings,
+                "deductions":deductions,
             }
-    except Exception as e:
-        raise e
-
+        }
+    
 @frappe.whitelist()
 def get_salary_slip_with_details(employee=None, employee_name=None,start_date=None, end_date=None):
     """
