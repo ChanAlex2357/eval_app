@@ -8,6 +8,7 @@ from erpnext.buying.doctype.request_for_quotation.request_for_quotation import m
 from eval_app.data_management.doctype.eval_import_v3.eval_import_v3 import EvalImportV3
 from frappe.utils.file_manager import save_file
 from eval_app.data_management.doctype.reset_data.reset_data import reset_data
+from hrms.payroll.doctype.payroll_entry.payroll_entry import get_end_date
 
 class ApiResponse:
     def __init__(self, success=True, message="", data=None, errors=None):
@@ -206,7 +207,7 @@ def remote_import():
         eval_v3.insert()
 
 
-        # 🗂️ Upload des fichiers dans public/files
+        # 🗂️ Upload des fichiers dans public.files
         emp_uploaded = save_file(emp_file.filename, emp_file.stream.read(), eval_v3.doctype, eval_v3.name, is_private=False)
 
         struct_uploaded = save_file(structure_file.filename, structure_file.stream.read(), eval_v3.doctype, eval_v3.name, is_private=False)
@@ -290,15 +291,31 @@ def get_quotations_for_rfq(rfq_name, supplier=None):
 
 @frappe.whitelist()
 def get_salary_annual(year = 2025):
-
-    month_data = []
+    months_str = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    months = []
     try:
         for i in range(12):
-            month = i+1
-            month_name = "month_name"
-            data = get_salary_slip_with_details(start_date=f"{year}-01-01", end_date=f"{year}-12-31")
+            month = f"{i+1}"
 
-        return make_response(True,f"Data fetched for {year}")
+            if i < 9:
+                month = f"0{month}"
+            month_name = f"{months_str[i]} {year}"
+
+            start_date = f"{year}-{month}-01"
+            end_date = get_end_date(start_date,"monthly").get("end_date")
+            month_data = filter_salary_slip(start_date=start_date, end_date=end_date)
+
+            months.append({
+                "period":month_name,
+                "start_date":start_date,
+                "end_date":end_date,
+                "salaries":month_data
+            })
+
+        return make_response(True,f"Data fetched for {year}",{
+            "year":year,
+            "months":months
+        })
 
     except Exception as e:
         frappe.log_error(
@@ -334,10 +351,10 @@ def filter_salary_slip(employee=None, employee_name=None,start_date=None, end_da
         sum_net_pay = 0
         for slip in salary_slips:
             slip = frappe.get_doc("Salary Slip",slip.name) #
-            data.append(slip.as_dict())
-            sum_earnings += slip.gross_pay
-            sum_deductions += slip.total_deduction
-            sum_net_pay += slip.net_pay
+            data.append(slip.as_dict()) # liste des salary slip compris dans la periode
+            sum_earnings += slip.gross_pay  # calcul somme earnings
+            sum_deductions += slip.total_deduction # calcul somme deductions
+            sum_net_pay += slip.net_pay # calcul somme salaire net
 
         return {
                 "sum_earnings":sum_earnings,
