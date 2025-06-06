@@ -7,6 +7,7 @@ from eval_app.data_management.doctype.file_1___material_request_import.file_1___
 from erpnext.buying.doctype.request_for_quotation.request_for_quotation import make_supplier_quotation_from_rfq
 from eval_app.data_management.doctype.eval_import_v3.eval_import_v3 import EvalImportV3
 from frappe.utils.file_manager import save_file
+from eval_app.data_management.doctype.reset_data.reset_data import reset_data
 
 class ApiResponse:
     def __init__(self, success=True, message="", data=None, errors=None):
@@ -175,6 +176,17 @@ def get_request_quotation_list(supplier=None):
         fields = ["*"]
     )
     return make_response(True,"Request for Quotations",requests)
+@frappe.whitelist()
+def remote_reset_data():
+    try:
+        logs = reset_data()
+        if logs.__len__() > 0 :
+            return make_response(False,"Reset failed logs",{"logs":logs})
+        return make_response(True,"Reset done successfully",{"logs":logs})
+            
+    except Exception as e:
+        frappe.log_error(f"Erreur pendant remote reset:\n{traceback.format_exc()}")
+        return make_response(False,f"Failed to reset data : {str(e)}",None,traceback(e))
 
 @frappe.whitelist(allow_guest=False)
 def remote_import():

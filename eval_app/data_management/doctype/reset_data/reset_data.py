@@ -52,7 +52,7 @@ DEFAULT_TABLES = [
 
     # Import
     "Import Csv",
-    "Eval Import V3"
+    "Eval Import V3",
     # == RH ==
     "Salary Structure",
     "Salary Structure Assignment", 
