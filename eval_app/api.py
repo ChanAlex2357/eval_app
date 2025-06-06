@@ -294,6 +294,10 @@ def get_quotations_for_rfq(rfq_name, supplier=None):
 def get_salary_annual(year = 2025):
     months_str = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
     months = []
+
+    month_idx = set()
+    component_idx = set()
+
     try:
         for i in range(12):
             month = f"{i+1}"
@@ -304,10 +308,14 @@ def get_salary_annual(year = 2025):
 
             start_date = f"{year}-{month}-01"
             end_date = get_end_date(start_date,"monthly").get("end_date")
-            month_data = filter_salary_slip(start_date=start_date, end_date=end_date)
+            month_data = filter_salary_slip(start_date=start_date, end_date=end_date, component_idx=component_idx)
 
+            component_idx = month_data.get("component_idx")
+            month_idx.add(month_name)
             months.append({
+                "month_num":month,
                 "period":month_name,
+                "month_idx":month_idx,
                 "start_date":start_date,
                 "end_date":end_date,    # Info Mois
                 "total_earnings":month_data.get("sum_earnings"),        # total gains
@@ -319,6 +327,7 @@ def get_salary_annual(year = 2025):
 
         return make_response(True,f"Data fetched for {year}",{
             "year":year,
+            "component_idx"
             "months":months
         })
 
@@ -329,7 +338,7 @@ def get_salary_annual(year = 2025):
         )
         return make_response(False,"error while getting annual summary data",[],traceback(e))
 
-def filter_salary_slip(employee=None, employee_name=None,start_date=None, end_date=None):
+def filter_salary_slip(employee=None, employee_name=None,start_date=None, end_date=None , component_idx = set()):
     """
     Récupère les fiches de paie avec les détails des employés et des structures de salaire.
     Returns:
@@ -369,13 +378,17 @@ def filter_salary_slip(employee=None, employee_name=None,start_date=None, end_da
             curr_val += earn.amount
             earnings.__setitem__(component_name, curr_val)
 
+            component_idx.add(component_name)
+
         for deduct in slip.deductions :
             component_name = deduct.salary_component
             curr_val = deductions.pop(component_name, 0)
             curr_val += deduct.amount
             deductions.__setitem__(component_name, curr_val)
+            component_idx.add(component_name)
 
     return {
+            "component_idx":component_idx,
             "sum_earnings":sum_earnings,
             "sum_deductions":sum_deductions,
             "sum_salary":sum_net_pay,
