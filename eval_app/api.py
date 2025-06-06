@@ -11,6 +11,8 @@ from eval_app.data_management.doctype.reset_data.reset_data import reset_data
 from collections import defaultdict
 from hrms.payroll.doctype.payroll_entry.payroll_entry import get_end_date
 
+from frappe.utils import getdate
+
 class ApiResponse:
     def __init__(self, success=True, message="", data=None, errors=None):
         self.success = bool(success)
@@ -364,10 +366,14 @@ def filter_salary_slip(employee=None, employee_name=None,start_date=None, end_da
     sum_deductions = 0
     sum_net_pay = 0
     components = defaultdict(float)
+    
+    period = getdate(start_date).strftime('%B %Y')
 
     for slip in salary_slips:
         slip = frappe.get_doc("Salary Slip",slip.name) #
-        data.append(slip.as_dict()) # liste des salary slip compris dans la periode
+        slip_dict = slip.as_dict()
+        slip_dict.__setitem__("period",period)
+        data.append(slip_dict) # liste des salary slip compris dans la periode
         sum_earnings += slip.gross_pay  # calcul somme earnings
         sum_deductions += slip.total_deduction # calcul somme deductions
         sum_net_pay += slip.net_pay # calcul somme salaire net
@@ -404,6 +410,7 @@ def get_salary_slip_with_details(employee=None, employee_name=None,start_date=No
         dict: {success: bool, message: str, data: list}
     """
     try:
+        
         data = filter_salary_slip(employee,employee_name,start_date,end_date)
         return make_response(
             success=True,
