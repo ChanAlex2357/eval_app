@@ -278,7 +278,7 @@ def get_quotations_for_rfq(rfq_name, supplier=None):
 
 
 @frappe.whitelist()
-def get_salary_slip_with_details(employee=None,start_date=None, end_date=None):
+def get_salary_slip_with_details(employee=None, employee_name=None,start_date=None, end_date=None):
     """
     Récupère les fiches de paie avec les détails des employés et des structures de salaire.
     Returns:
@@ -289,6 +289,8 @@ def get_salary_slip_with_details(employee=None,start_date=None, end_date=None):
         filters = {}
         if employee:
             filters["employee"] = employee
+        if employee_name:
+            filters["employee_name"] = employee_name
         if start_date:
             filters["start_date"] = [">=", start_date]
         if end_date:
@@ -304,7 +306,7 @@ def get_salary_slip_with_details(employee=None,start_date=None, end_date=None):
         for slip in salary_slips:
             slip = frappe.get_doc("Salary Slip",slip.name)
             data.append(slip.as_dict())
-            sum_earnings += slip.gros_pay
+            sum_earnings += slip.gross_pay
             sum_deductions += slip.total_deduction
             sum_net_pay += slip.net_pay
 

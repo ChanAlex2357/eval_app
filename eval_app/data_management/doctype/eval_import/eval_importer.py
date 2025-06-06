@@ -51,7 +51,6 @@ def get_resutlt_report(imports=None):
 
 def process_stack_imports(imports):
     frappe.db.commit()
-
     try:
         frappe.db.begin()
 
