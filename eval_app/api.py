@@ -315,19 +315,20 @@ def get_salary_annual(year = 2025):
             months.append({
                 "month_num":month,
                 "period":month_name,
-                "month_idx":month_idx,
                 "start_date":start_date,
                 "end_date":end_date,    # Info Mois
                 "total_earnings":month_data.get("sum_earnings"),        # total gains
                 "total_deductions":month_data.get("sum_deductions"),    # total deductions
                 "total_salary":month_data.get("sum_salary"),            # total Salaire du mois
                 "components":month_data.get("components"),
-                "salaries":month_data.get("salaries"),                  # Les details du salaire du mois
+                # "salaries":month_data.get("salaries"),                  # Les details du salaire du mois
+                # "salaries":[],                  # Les details du salaire du mois
             })
 
         return make_response(True,f"Data fetched for {year}",{
             "year":year,
-            "component_idx"
+            "component_idx":component_idx,
+            "month_idx":month_idx,
             "months":months
         })
 
@@ -362,8 +363,7 @@ def filter_salary_slip(employee=None, employee_name=None,start_date=None, end_da
     sum_earnings = 0
     sum_deductions = 0
     sum_net_pay = 0
-    earnings = defaultdict(float)
-    deductions = defaultdict(float)
+    components = defaultdict(float)
 
     for slip in salary_slips:
         slip = frappe.get_doc("Salary Slip",slip.name) #
@@ -374,17 +374,17 @@ def filter_salary_slip(employee=None, employee_name=None,start_date=None, end_da
 
         for earn in slip.earnings :
             component_name = earn.salary_component
-            curr_val = earnings.pop(component_name, 0)
+            curr_val = components.pop(component_name, 0)
             curr_val += earn.amount
-            earnings.__setitem__(component_name, curr_val)
+            components.__setitem__(component_name, curr_val)
 
             component_idx.add(component_name)
 
         for deduct in slip.deductions :
             component_name = deduct.salary_component
-            curr_val = deductions.pop(component_name, 0)
+            curr_val = components.pop(component_name, 0)
             curr_val += deduct.amount
-            deductions.__setitem__(component_name, curr_val)
+            components.__setitem__(component_name, curr_val)
             component_idx.add(component_name)
 
     return {
@@ -393,10 +393,7 @@ def filter_salary_slip(employee=None, employee_name=None,start_date=None, end_da
             "sum_deductions":sum_deductions,
             "sum_salary":sum_net_pay,
             "salaries":data,
-            "components":{
-                "earnings":earnings,
-                "deductions":deductions,
-            }
+            "components":components
         }
     
 @frappe.whitelist()
