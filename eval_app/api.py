@@ -288,9 +288,26 @@ def get_quotations_for_rfq(rfq_name, supplier=None):
         }
     }
 
-
 @frappe.whitelist()
-def get_salary_slip_with_details(employee=None, employee_name=None,start_date=None, end_date=None):
+def get_salary_annual(year = 2025):
+
+    month_data = []
+    try:
+        for i in range(12):
+            month = i+1
+            month_name = "month_name"
+            data = get_salary_slip_with_details(start_date=f"{year}-01-01", end_date=f"{year}-12-31")
+
+        return make_response(True,f"Data fetched for {year}")
+
+    except Exception as e:
+        frappe.log_error(
+            title="Error fetching salary slips",
+            message=traceback.format_exc()
+        )
+        return make_response(False,"error while getting annual summary data",[],traceback(e))
+
+def filter_salary_slip(employee=None, employee_name=None,start_date=None, end_date=None):
     """
     Récupère les fiches de paie avec les détails des employés et des structures de salaire.
     Returns:
@@ -316,21 +333,34 @@ def get_salary_slip_with_details(employee=None, employee_name=None,start_date=No
         sum_deductions = 0
         sum_net_pay = 0
         for slip in salary_slips:
-            slip = frappe.get_doc("Salary Slip",slip.name)
+            slip = frappe.get_doc("Salary Slip",slip.name) #
             data.append(slip.as_dict())
             sum_earnings += slip.gross_pay
             sum_deductions += slip.total_deduction
             sum_net_pay += slip.net_pay
 
+        return {
+                "sum_earnings":sum_earnings,
+                "sum_deductions":sum_deductions,
+                "sum_salary":sum_net_pay,
+                "salaries":data,
+            }
+    except Exception as e:
+        raise e
+
+@frappe.whitelist()
+def get_salary_slip_with_details(employee=None, employee_name=None,start_date=None, end_date=None):
+    """
+    Récupère les fiches de paie avec les détails des employés et des structures de salaire.
+    Returns:
+        dict: {success: bool, message: str, data: list}
+    """
+    try:
+        data = filter_salary_slip(employee,employee_name,start_date,end_date)
         return make_response(
             success=True,
             message=_("Fetched salary slips successfully."),
-            data={
-                "salaries":data,
-                "sum_earnings":sum_earnings,
-                "sum_deductions":sum_deductions,
-                "sum_salary":sum_net_pay
-            }
+            data=data
         )
 
     except Exception as e:
