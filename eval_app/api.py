@@ -365,6 +365,8 @@ def filter_salary_slip(employee=None, employee_name=None,start_date=None, end_da
     sum_earnings = 0
     sum_deductions = 0
     sum_net_pay = 0
+    earnings = defaultdict(float)
+    deductions = defaultdict(float)
     components = defaultdict(float)
     
     period = getdate(start_date).strftime('%B %Y')
@@ -380,16 +382,20 @@ def filter_salary_slip(employee=None, employee_name=None,start_date=None, end_da
 
         for earn in slip.earnings :
             component_name = earn.salary_component
-            curr_val = components.pop(component_name, 0)
-            curr_val += earn.amount
-            components.__setitem__(component_name, curr_val)
 
+            curr_val = earnings.pop(component_name, 0)
+            curr_val += earn.amount
+            earnings.__setitem__(component_name, curr_val)
+            
+            components.__setitem__(component_name, curr_val)
             component_idx.add(component_name)
 
         for deduct in slip.deductions :
             component_name = deduct.salary_component
-            curr_val = components.pop(component_name, 0)
+            curr_val = deductions.pop(component_name, 0)
             curr_val += deduct.amount
+            deductions.__setitem__(component_name, curr_val)
+            
             components.__setitem__(component_name, curr_val)
             component_idx.add(component_name)
 
@@ -399,7 +405,11 @@ def filter_salary_slip(employee=None, employee_name=None,start_date=None, end_da
             "sum_deductions":sum_deductions,
             "sum_salary":sum_net_pay,
             "salaries":data,
-            "components":components
+            "components":{
+                "earnings":earnings,
+                "deductions":deductions,
+                "all": components
+            }
         }
     
 @frappe.whitelist()
