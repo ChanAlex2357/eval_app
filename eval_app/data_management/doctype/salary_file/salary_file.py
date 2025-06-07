@@ -8,7 +8,9 @@ from frappe.utils import getdate
 from frappe.model.document import Document
 from erpnext.accounts.utils import FiscalYearError, get_fiscal_year
 from hrms.payroll.doctype.salary_slip.salary_slip import SalarySlip
-from frappe.utils import add_days, add_years, cstr, getdate
+from frappe.utils import cstr, getdate
+from hrms.payroll.doctype.payroll_entry.payroll_entry import get_end_date
+
 from hrms.payroll.doctype.salary_structure.salary_structure import assign_salary_structure_for_employees, make_salary_slip
 
 class SalaryFile(Document):
@@ -72,10 +74,11 @@ class SalaryFile(Document):
 		return frappe.get_doc("Salary Structure", existing)
 
 	def build_salary_slip(self, emp, salary_structure, start_date):
+		end_date = get_end_date(start_date,"monthly").get("end_date")
 		salary_slip:SalarySlip = make_salary_slip(
 			source_name=salary_structure.name,
 			employee=emp.name,
-			posting_date=start_date,
+			posting_date=end_date,
 		)
 		return salary_slip
 
