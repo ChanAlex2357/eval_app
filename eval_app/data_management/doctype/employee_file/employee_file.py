@@ -92,6 +92,9 @@ class EmployeeFile(Document):
 				"default_holiday_list":"HL"
 			})
 			company_doc.insert()
+
+			company_doc.cost_center = f"Main - {company_doc.abbr}"
+			company_doc.save()
 			return company_doc
 		except Exception as e:
 			frappe.log_error(title=f"Import {self.name} Employee.Company",message=traceback.format_exc())
