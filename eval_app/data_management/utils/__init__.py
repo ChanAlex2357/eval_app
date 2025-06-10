@@ -1,6 +1,6 @@
 
 from frappe.utils import getdate
-
+from datetime import datetime
 class ExceptionGroup(Exception):
     def __init__(self,msg):
         
@@ -31,24 +31,33 @@ def check_void_str(value, col_name):
 def process_date(date_str, prop_name):
     if date_str == None or date_str  == "":
         raise Exception(f"La date '{prop_name}' ne peut pas etre null")
-    process_date = getdate(validate_date_format(date_str))
+    process_date = (validate_date_format(date_str))
     return process_date
 
-def validate_date_format(date_str):
-    from datetime import datetime
-    try:
-        try:
-            return getdate(datetime.strptime(date_str, "%d/%m/%Y").date())
-        except ValueError:
-            return getdate(datetime.strptime(date_str, "%d-%m-%Y").date())
-    except Exception:
-        raise Exception(f"Format de date invalide : {date_str}. Format attendu : jj/mm/aaaa")
 
-def parse_quantity(qty_str):
+def validate_date_format(date_str):
+    """
+    Tente de parser une date depuis une chaîne selon différents formats courants.
+    Renvoie une date au format Frappe.
+    """
+    formats = ["%d/%m/%Y", "%d-%m-%Y", "%Y/%m/%d", "%Y-%m-%d", "%d.%m.%Y"]
+    
+    for fmt in formats:
+        try:
+            return getdate(datetime.strptime(date_str.strip(), fmt).date())
+        except ValueError:
+            continue
+
+    raise Exception(f"Format de date invalide : '{date_str}'. Formats attendus : {', '.join(formats)}")
+
+import re
+
+def parse_quantity(val):
+    if isinstance(val, (int, float)):
+        return float(val)
+    val = str(val).replace(" ", "").replace(",", ".").replace('"', '').replace("'", '')
+    val = re.sub(r"[^\d\.]", "", val)  # garde que les chiffres et les points
     try:
-        qty = float(qty_str)
-        if qty < 0:
-            raise Exception("La quantité doit être positive")
-        return qty
-    except ValueError as e:
-        raise Exception(f"Quantité invalide : {qty_str} | {str(e)}")
+        return float(val)
+    except ValueError:
+        raise Exception(f"Invalid amount: '{val}'")

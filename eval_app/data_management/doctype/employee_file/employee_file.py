@@ -107,17 +107,17 @@ class EmployeeFile(Document):
 		return self.nom, self.prenom
 	
 	def process_embauche(self):
-		return process_date(self.date_embauche, "Date Embauche")
+		return process_date(self.date_embauche, "Date d'embauche")
 
 	def process_naissance(self):
-		return process_date(self.date_naissance, "Date Naissance")
+		return process_date(self.date_naissance, "Date de naissance")
 	
 	def process_genre(self):
 		check_void_str(self.genre, "Genre")
-		if(self.genre == "Masculin"):
+		if(self.genre == "Masculin" or self.genre == "male" or self.genre == "masculin" ):
 			self.genre = "Male"
 
-		if(self.genre == "Feminin"):
+		if(self.genre == "Feminin" or self.genre == "female" or self.genre == "feminin"):
 			self.genre = "Female"
 
 		existing = frappe.db.exists("Gender", self.genre)

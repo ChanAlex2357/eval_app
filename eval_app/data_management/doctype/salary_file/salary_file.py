@@ -4,6 +4,7 @@
 import frappe
 from eval_app.data_management.utils import *
 import datetime
+from datetime import date
 from frappe.utils import getdate
 from frappe.model.document import Document
 from erpnext.accounts.utils import FiscalYearError, get_fiscal_year
@@ -37,6 +38,7 @@ class SalaryFile(Document):
 
 		try:
 			salary_structure = self.process_salary_structure(emp)
+			pass
 		except Exception as e:
 			eg.add_error(e)
 
@@ -74,6 +76,7 @@ class SalaryFile(Document):
 		return frappe.get_doc("Salary Structure", existing)
 
 	def build_salary_slip(self, emp, salary_structure, start_date):
+		# starting_date = date(start_date.year, start_date.month, 1)
 		end_date = get_end_date(start_date,"monthly").get("end_date")
 		salary_slip:SalarySlip = make_salary_slip(
 			source_name=salary_structure.name,
@@ -93,6 +96,8 @@ class SalaryFile(Document):
 		try:
 			date_mois = getdate(mois)
 			salary_slip:SalarySlip = None
+			start_month = date(mois.year, mois.month, 1)
+			end_month = get_end_date(start_month,"monthly").get("end_date")
 			try :
 				salary_slip = self.build_salary_slip(emp, salary_structure, date_mois)
 			except FiscalYearError as e :
@@ -103,6 +108,8 @@ class SalaryFile(Document):
 				raise Exception("Salary slip not instanciated")
 
 			salary_slip.start_date = date_mois
+			salary_slip.end_date = end_month
+			salary_slip.posting_date = end_month
 			salary_slip.insert()
 			salary_slip.submit()
 		except Exception as e:
@@ -110,6 +117,7 @@ class SalaryFile(Document):
 
 	def process_assignement(self, emp, salary_sturcture, mois, salaire_base):
 		try:
+			start_date = date(mois.year, mois.month, 1)
 			assign_salary_structure_for_employees(
 				employees=[emp],
 				salary_structure=salary_sturcture,

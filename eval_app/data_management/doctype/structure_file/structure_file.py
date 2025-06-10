@@ -101,6 +101,7 @@ class StructureFile(Document):
 		return self.valeur
 	
 	def process_type(self):
+		self.type = self.type.lower()
 		check_void_str(self.type, "Component Type")
 
 		if self.type not in COMPONENT_TYPE:
