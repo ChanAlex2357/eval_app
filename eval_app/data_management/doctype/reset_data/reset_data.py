@@ -59,6 +59,10 @@ DEFAULT_TABLES = [
     "Salary Component",
     "Salary Structure",
     "Employee",
+    "Employee Checkin",
+    "Leave Ledger Entry",
+    "Leave Allocation",
+    "Leave Application"
 ]
 
 DEFAULT_MODULES = [
@@ -99,19 +103,33 @@ def delete_table_data(doctype):
         # return True
     # return False
 
+def cancel_and_delete_entries(doctype,filters=""):
+    entries = frappe.get_all(doctype, filters, pluck="name")
+    for entry in entries:
+        doc = frappe.get_doc(doctype, entry)
+        doc.cancel()
+        doc.delete()
+
 def delete_custom_company():
     """Supprime les données de la société personnalisée"""
     try:
-        # Supprime les sociétés sauf Itu Eval
-        frappe.db.sql("DELETE FROM `tabCompany` WHERE name NOT LIKE 'Itu Eval'")
-
         # Récupère les bulletins soumis (docstatus = 1)
-        slips = frappe.get_all("Salary Slip", filters={"docstatus": 1}, pluck="name")
+        cancel_and_delete_entries("Salary Slip", filters={"docstatus": 1})
+        # slips = frappe.get_all("Salary Slip", filters={"docstatus": 1}, pluck="name")
+        # for slip_name in slips:
+        #     slip_doc = frappe.get_doc("Salary Slip", slip_name)
+        #     slip_doc.cancel()   # Nécessaire avant suppression si docstatus = 1
+        #     slip_doc.delete()
 
-        for slip_name in slips:
-            slip_doc = frappe.get_doc("Salary Slip", slip_name)
-            slip_doc.cancel()   # Nécessaire avant suppression si docstatus = 1
-            slip_doc.delete()
+        
+        cancel_and_delete_entries("Payroll Entry", filters={"docstatus": 1})
+        # pay_entries = ("Payroll Entry", filters={"docstatus": 1}, pluck="name")
+        # for pe in pay_entries:
+            # pe_doc = frappe.get_doc("Payroll Entry", pe)
+            # pe_doc.cancel()
+            # pe_doc.delete()
+        
+        cancel_and_delete_entries("Attendance")
 
         frappe.db.commit()
         return True

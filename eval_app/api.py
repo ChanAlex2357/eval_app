@@ -357,11 +357,14 @@ def filter_salary_slip(employee=None, employee_name=None,start_date=None, end_da
         filters["start_date"] = [">=", start_date]
     if end_date:
         filters["end_date"] = ["<=", end_date]
+    filters["docstatus"] = 1
     salary_slips = frappe.get_all(
         "Salary Slip",
         fields=["name"],
         filters=filters,
+        order_by="posting_date asc"
     )
+    
     sum_earnings = 0
     sum_deductions = 0
     sum_net_pay = 0
@@ -369,11 +372,11 @@ def filter_salary_slip(employee=None, employee_name=None,start_date=None, end_da
     deductions = defaultdict(float)
     components = defaultdict(float)
     
-    period = getdate(start_date).strftime('%B %Y')
 
     for slip in salary_slips:
         slip = frappe.get_doc("Salary Slip",slip.name) #
         slip_dict = slip.as_dict()
+        period = getdate(slip.start_date).strftime('%B %Y')
         slip_dict.__setitem__("period",period)
         data.append(slip_dict) # liste des salary slip compris dans la periode
         sum_earnings += slip.gross_pay  # calcul somme earnings

@@ -62,7 +62,9 @@ class EmployeeFile(Document):
 				"date_of_joining":date_embauche,
 				"date_of_birth":date_naissance,
 				"gender":genre,
-				"emp_ref":ref
+				"emp_ref":ref,
+				"leave_approver":"Administrator",
+				"holiday_list":"HL"
 			})
 			emp.insert()
 		except Exception as e :
