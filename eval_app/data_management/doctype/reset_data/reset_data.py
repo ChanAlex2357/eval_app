@@ -62,7 +62,9 @@ DEFAULT_TABLES = [
     "Employee Checkin",
     "Leave Ledger Entry",
     "Leave Allocation",
-    "Leave Application"
+    "Leave Application",
+    "Shift Assignment",
+    "Additional Salary"
 ]
 
 DEFAULT_MODULES = [
